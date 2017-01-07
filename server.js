@@ -10,20 +10,40 @@ var proxy = httpProxy.createServer({
   secure: false
 })
 
-
 var app = connect();
 
-var selects = [];
-var simpleselect = {};
+var modifications = [];
 
-simpleselect.query = '.tb-login-form-container';
-simpleselect.func = function (node) {
-	node.createWriteStream().end('<div>+ Trumpet</div>');
-}
 
-//selects.push(simpleselect);
+modifications.push({
+  query: 'meta[name=viewport]',
+  func: node => node.setAttribute('content', 'width=device-width, user-scalable=no')
+},{
+  query: 'meta[name=apple-itunes-app]',
+  func: node => {
+    console.log('removing apple shit');
+    return node.createWriteStream({outer: true }).end('')
+  }
+},{
+  query: 'head',
+  func: node => {
 
-app.use(harmon([],selects));
+    var injectStream = fs.createReadStream(__dirname+'/inject.html');
+    var rs = node.createReadStream();
+    var ws = node.createWriteStream({inner: false});
+
+    // Read the node and put it back into our write stream, 
+    // but don't end the write stream when the readStream is closed.
+    rs.pipe(ws, {end: false});
+
+    // When the read stream has ended, attach our style to the end
+    rs.on('end', function(){
+      injectStream.pipe(ws);
+    });
+  }
+});
+
+app.use(harmon([], modifications));
 
 app.use((req, res) => {
   proxy.web(req, res);
