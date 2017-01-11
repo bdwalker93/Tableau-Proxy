@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var fs = require('fs');
 var PORT = 3000;
 var https = require('https');
@@ -10,13 +11,14 @@ var proxy = httpProxy.createServer({
   secure: false
 })
 
+var Promise = require('bluebird');
 var app = express();
 
-var modifications = [];
+var rootModifications = [];
 
 var style = "<style>"+fs.readFileSync(__dirname+'/inject-style.css')+"</style>";
 
-modifications.push({
+rootModifications.push({
   query: 'meta[name=viewport]',
   func: node => node.setAttribute('content', 'width=device-width, user-scalable=no')
 },{
@@ -44,17 +46,61 @@ modifications.push({
 });
 
 
+const transformerProxy = require('transformer-proxy');
+const zlib = require('zlib');
+const gzip = zlib.Gzip();
+
+
+const concatStream = require('concat-stream');
+
 app.use((req, res, next) => {
   if ( req.url === '/' ) {
-    harmon([], modifications)(req, res, next);
+    harmon([], rootModifications)(req, res, next);
   } else if (req.url.match(/^\/en\/loginSitePicker.html/)) {
-    harmon([], [{
-      query: '.tb-login',
-      func: node => {
-        var rs = fs.createReadStream(__dirname+'/loginSitePicker.html');
-        rs.pipe(node.createWriteStream({outer: true }));
+    fs.createReadStream(__dirname+'/loginSitePicker.html').pipe(res);
+  } else if (
+    req.url.match(/^\/vizportal\/api\/web\/v1\/getSessionInfo/) ||
+    req.url.match(/^\/vizportal\/api\/web\/v1\/login/) ||
+    req.url.match(/^\/vizportal\/api\/web\/v1\/switchSite/)
+  ) {
+    transformerProxy(function(data, req, res) {
+      console.log('in transformer...');
+      console.log(res._headers['content-encoding']);
+      if (res._headers['content-encoding'] === 'gzip') {
+        console.log('THIS IS A GZIP');
       }
-    }])(req, res, next);
+      if (res.statusCode !== 200) return data;
+      return new Promise(function(resolve, reject) {
+        var gunzip = zlib.createGunzip();            
+        gunzip.on('error', reject);
+        gunzip.pipe(concatStream(resolve));
+        gunzip.write(data);
+        gunzip.end();
+      }).then((data) => {
+        try {
+          let obj = JSON.parse(data);
+          obj.result.user.startPage = '/workbooks';
+          return JSON.stringify(obj);
+        } catch (e) {
+          return data;
+        }
+      }).catch(err=>{
+        console.log(err.message);
+        return "{}"
+      }).then((data) => {
+        return new Promise(function(resolve, reject) {
+          var gzip = zlib.createGzip();            
+          gzip.on('error', reject);
+          gzip.pipe(concatStream(resolve));
+          gzip.write(data);
+          gzip.end();
+        });
+      }).catch(err=>{
+        console.log(err.message);
+        return "{}"
+      })
+    })(req,res,next);
+
   } else {
     next();
   }
@@ -66,5 +112,5 @@ https.createServer({
   key: fs.readFileSync('localhost.key', 'utf8'),
   cert: fs.readFileSync('localhost.cert', 'utf8')
 }, app).listen(PORT, function() {
-  console.log('listening on port '+PORT);
+  console.log('Proxy server running: https://localhost:'+PORT);
 });
