@@ -27,10 +27,7 @@ rootModifications.push({
   func: node => node.setAttribute('content', 'width=device-width, user-scalable=no')
 },{
   query: 'meta[name=apple-itunes-app]',
-  func: node => {
-    console.log('removing apple shit');
-    return node.createWriteStream({outer: true }).end('')
-  }
+  func: node => node.createWriteStream({outer: true }).end('')
 },{
   query: 'head',
   func: node => {
