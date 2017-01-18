@@ -5,6 +5,10 @@ var https = require('https');
 var httpProxy = require('http-proxy');
 var express = require('express');
 var harmon = require('harmon');
+const transformerProxy = require('transformer-proxy');
+const zlib = require('zlib');
+const gzip = zlib.Gzip();
+const concatStream = require('concat-stream');
 
 var proxy = httpProxy.createServer({
   target: 'https://tableau.ics.uci.edu',
@@ -45,14 +49,6 @@ rootModifications.push({
   }
 });
 
-
-const transformerProxy = require('transformer-proxy');
-const zlib = require('zlib');
-const gzip = zlib.Gzip();
-
-
-const concatStream = require('concat-stream');
-
 app.use((req, res, next) => {
   if ( req.url === '/' ) {
     harmon([], rootModifications)(req, res, next);
@@ -64,12 +60,8 @@ app.use((req, res, next) => {
     req.url.match(/^\/vizportal\/api\/web\/v1\/switchSite/)
   ) {
     transformerProxy(function(data, req, res) {
-      console.log('in transformer...');
-      console.log(res._headers['content-encoding']);
-      if (res._headers['content-encoding'] === 'gzip') {
-        console.log('THIS IS A GZIP');
-      }
       if (res.statusCode !== 200) return data;
+      if (res._headers['content-encoding'] !== 'gzip') return data;
       return new Promise(function(resolve, reject) {
         var gunzip = zlib.createGunzip();            
         gunzip.on('error', reject);
