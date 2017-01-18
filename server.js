@@ -49,50 +49,17 @@ rootModifications.push({
   }
 });
 
+app.use(express.static('public'));
+
 app.use((req, res, next) => {
   if ( req.url === '/' ) {
     harmon([], rootModifications)(req, res, next);
   } else if (req.url.match(/^\/en\/loginSitePicker.html/)) {
     fs.createReadStream(__dirname+'/loginSitePicker.html').pipe(res);
-  } else if (
-    req.url.match(/^\/vizportal\/api\/web\/v1\/getSessionInfo/) ||
-    req.url.match(/^\/vizportal\/api\/web\/v1\/login/) ||
-    req.url.match(/^\/vizportal\/api\/web\/v1\/switchSite/)
-  ) {
-    transformerProxy(function(data, req, res) {
-      if (res.statusCode !== 200) return data;
-      if (res._headers['content-encoding'] !== 'gzip') return data;
-      return new Promise(function(resolve, reject) {
-        var gunzip = zlib.createGunzip();            
-        gunzip.on('error', reject);
-        gunzip.pipe(concatStream(resolve));
-        gunzip.write(data);
-        gunzip.end();
-      }).then((data) => {
-        try {
-          let obj = JSON.parse(data);
-          obj.result.user.startPage = '/workbooks';
-          return JSON.stringify(obj);
-        } catch (e) {
-          return data;
-        }
-      }).catch(err=>{
-        console.log(err.message);
-        return "{}"
-      }).then((data) => {
-        return new Promise(function(resolve, reject) {
-          var gzip = zlib.createGzip();            
-          gzip.on('error', reject);
-          gzip.pipe(concatStream(resolve));
-          gzip.write(data);
-          gzip.end();
-        });
-      }).catch(err=>{
-        console.log(err.message);
-        return "{}"
-      })
-    })(req,res,next);
-
+  } else if (req.url.match(/^\/en\/main.html/)) {
+    fs.createReadStream(__dirname+'/react/index.html').pipe(res);
+  } else if (req.url.match(/^\/bundle.js/)) {
+    fs.createReadStream(__dirname+'/react/bundle.js').pipe(res);
   } else {
     next();
   }

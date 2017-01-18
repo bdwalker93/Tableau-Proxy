@@ -1,1 +1,8 @@
 node_modules
+public/bundle.*
+public/*-*-*.png
+public/*.wof*
+public/*.eot
+public/*.svg
+public/*.ttf
+public/*.eot
