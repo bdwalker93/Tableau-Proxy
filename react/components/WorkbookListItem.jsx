@@ -27,8 +27,12 @@ export const WorkbookListItem = ({
     <p>{ownerName}</p>
     <p>{moment(updatedAt).format('L, LT')}</p>
     <p>{projectName}</p>
-    <button className="fav-star" onClick={onFavorite}>
-      <i className={`fa fa-star${isFav ? '' : '-o'}`}/>
-    </button>
+    <a onClick={onFavorite}>
+      { isFav ? 
+        <img src="/img/star_selected_small_normal.svg"/>
+          : 
+        <img src="/img/star_empty_small_hover.svg"/>
+      }
+    </a>
   </div>
 </div>
