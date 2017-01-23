@@ -6,7 +6,7 @@ import moment from 'moment';
 export const WorkbookListItem = ({
   workbook: {
     id,
-    thumbnail,
+    thumbnailUrl,
     name,
     ownerName,
     projectName,
@@ -19,7 +19,7 @@ export const WorkbookListItem = ({
 <div className={`row workbook-item ${parseInt(size) > 1 ? 'multi' : ''}`}>
   <div className="col-xs-6">
     <Link to={`/viz/${id}`}  className="workbook-thumbnail-container">
-      { thumbnail ? <img className="workbook-thumbnail" src={thumbnail} /> : <span>Loading thumbnail...</span>}
+      <img className="workbook-thumbnail" src={thumbnailUrl} />
     </Link>
   </div>
   <div className="col-xs-6">

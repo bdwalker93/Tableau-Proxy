@@ -14,7 +14,7 @@ const Workbooks = ({
 }) =>
 <div className="workbook-page">
   { workbookIds.map(id => <WorkbookListItem key={id}
-    workbook={workbooksById[id]} isFav={false}
+    workbook={workbooksById[id]} isFav={workbooksById[id].isFavorite}
     onFavorite={() => {
       console.log('favorite star clicked: wbid=', id);
       deleteFavoriteWorkbook(id);

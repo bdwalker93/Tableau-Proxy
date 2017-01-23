@@ -12,34 +12,28 @@ import * as actionCreators from './action-creators';
 import 'font-awesome/less/font-awesome.less';
 import 'bootstrap/less/bootstrap.less';
 
+import axios from 'axios';
+
 const reducer = combineReducers({
   form: formReducer,
   workbooks: workbooksReducer
 });
 
-const remoteActionMiddleware = store => next => action => {
-  if (action.meta && action.meta.remote) {
-    console.log("TODO emit action over ajax");
-    console.log(action);
-    // request response cycle
-    // // response....
-    //  socket.on('action', action => {
-    //    console.log('incoming socket event. dispatching', action);
-    //    store.dispatch(action);
-    //  })
-  }
-  next(action);
-}
-
-const createStoreWithMiddleware = applyMiddleware(
-  remoteActionMiddleware
-)(createStore);
-
-const store = createStoreWithMiddleware(reducer);
+const store = createStore(reducer);
 
 function loadWorkbooks() {
-  //socket.emit('action', actionCreators.loadWorkbooks())
-  store.dispatch(actionCreators.loadWorkbooks());
+  axios({
+    method: 'POST', 
+    url: '/vizportal/api/web/v1/getWorkbooks',
+    data:{"method":"getWorkbooks","params":{"order":[{"field":"hitsTotal","ascending":false},{"field":"name","ascending":true}],"page":{"startIndex":0,"maxItems":18},"statFields":["hitsTotal","favoritesTotal","hitsLastOneMonthTotal","hitsLastThreeMonthsTotal","hitsLastTwelveMonthsTotal","subscriptionsTotal"]}}
+  }).then(res => {
+    console.log('GOT RESPONSE LOL', res.data);
+    store.dispatch({
+      type: 'SET_WORKBOOKS',
+      workbooks: res.data.result.workbooks,
+      favorites: res.data.result.favorites
+    });
+  });
 }
 
 // Mostly boilerplate, except for the Routes. These are the pages you can go to,

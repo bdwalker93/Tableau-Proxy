@@ -8,6 +8,16 @@ export default function(state = init, action) {
     case 'SET_WORKBOOKS': {
       return action.workbooks.reduce((memo, wb) => {
         let obj = {...memo.workbooksById};
+
+        // wb needs to have an isFavorite flag. determine this
+        wb.isFavorite = false;
+        if ( action.favorites ) {
+          wb.isFavorite = action.favorites.reduce((memo, favId) => {
+            if ( memo ) return memo;
+            if ( favId === wb.id ) return true;
+          }, wb.isFavorite);
+        }
+
         obj[wb.id] = wb;
         return {
           workbookIds: [...memo.workbookIds, wb.id],
