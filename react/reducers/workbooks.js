@@ -25,10 +25,11 @@ export default function(state = init, action) {
         }
       }, init);
     }
-    case 'UPDATE_WORKBOOK_IMAGE': {
+    case 'UPDATE_WORKBOOK': {
       let obj = {...state.workbooksById};
       let wb = obj[action.id];
-      wb.thumbnail = action.publicPath;
+      wb.ownerName = action.ownerName;
+      wb.projectName = action.projectName;
       return {
         workbookIds: state.workbookIds,
         workbooksById: obj

@@ -33,6 +33,23 @@ function loadWorkbooks() {
       workbooks: res.data.result.workbooks,
       favorites: res.data.result.favorites
     });
+
+    res.data.result.workbooks.forEach((wb)=>{
+      axios({
+        method: 'POST', 
+        url: '/vizportal/api/web/v1/getWorkbook',
+        data:{"method":"getWorkbook","params":{"id":wb.id}}
+      }).then(res => {
+        store.dispatch({
+          type: 'UPDATE_WORKBOOK',
+          id: wb.id,
+          ownerName: res.data.result.owner.displayName,
+          projectName: res.data.result.project.name
+        });
+      });
+    })
+
+
   });
 }
 
