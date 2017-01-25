@@ -35,9 +35,14 @@ export default function(state = init, action) {
         workbooksById: obj
       }
     }
-      //need to get a list of all the favorites here and update all favorite icons appropriately
-    case 'UPDATE_FAVORITE_WORKBOOKS': {
-      return {listOfFavorites: action.listOfFavorites};
+    case 'UPDATE_WORKBOOK_FAV': {
+      let obj = {...state.workbooksById};
+      let wb = obj[action.id];
+      wb.isFavorite = action.isFavorite;
+      return {
+        workbookIds: state.workbookIds,
+        workbooksById: obj
+      }
     }
   }
   return state

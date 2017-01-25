@@ -9,16 +9,18 @@ import './WorkbooksPage.less';
 const Workbooks = ({
   workbooksById,
   workbookIds,
-  setFavoriteWorkbook,
+  addFavoriteWorkbook,
   deleteFavoriteWorkbook
 }) =>
 <div className="workbook-page">
   { workbookIds.map(id => <WorkbookListItem key={id}
     workbook={workbooksById[id]} isFav={workbooksById[id].isFavorite}
     onFavorite={() => {
-      console.log('favorite star clicked: wbid=', id);
-      deleteFavoriteWorkbook(id);
-      //addFavoriteWorkbook(id);
+      if ( workbooksById[id].isFavorite ) {
+        deleteFavoriteWorkbook(id);
+      } else {
+        addFavoriteWorkbook(id);
+      }
     }}
   />)}
 </div>
