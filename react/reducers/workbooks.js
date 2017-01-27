@@ -6,7 +6,6 @@ const init = {
 export default function(state = init, action) {
   switch (action.type) {
     case 'SET_WORKBOOKS': {
-      console.log(action);
       return action.workbooks.reduce((memo, wb) => {
         let obj = {...memo.workbooksById};
 

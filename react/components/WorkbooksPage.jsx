@@ -12,8 +12,8 @@ const Workbooks = ({
   workbookIds,
   addFavoriteWorkbook,
   deleteFavoriteWorkbook,
+  loadWorkbooks,
   viewFavoriteWorkbooks,
-  tst
 }) =>
   <div className="workbook-page">
     { workbookIds.map(id => <WorkbookListItem key={id}
@@ -30,13 +30,12 @@ const Workbooks = ({
     }
     <WorkbookFooter
       viewAllWbs={() => {
-        console.log("view all");
+        loadWorkbooks();
       }}
       viewRecentWbs={() => {
         console.log("view recent");
       }}
       viewFavoriteWbs={() => {
-        console.log("view favorites");
         viewFavoriteWorkbooks();
       }}
     />
