@@ -3,6 +3,8 @@ import { Link } from 'react-router'
 
 import moment from 'moment';
 
+import './WorkbookFooter.less';
+
 export const WorkbookFooter = ({
   viewAllWbs,
   viewRecentWbs,
