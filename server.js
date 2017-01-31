@@ -58,6 +58,7 @@ app.use((req, res, next) => {
   } else if (req.url.match(/^\/bundle.js/)) {
     fs.createReadStream(__dirname+'/react/bundle.js').pipe(res);
   } else if (req.url.match(/^\/app\/.+/)) {
+    // catchall route to load react app
     fs.createReadStream(__dirname+'/public/app/index.html').pipe(res);
   } else {
     next();
