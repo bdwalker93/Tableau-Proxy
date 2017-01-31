@@ -6,6 +6,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { reducer as formReducer } from 'redux-form'
 import App from './components/App';
 import { WorkbooksPage } from './components/WorkbooksPage';
+import { VizPage } from './components/VizPage';
 import workbooksReducer from './reducers/workbooks';
 import * as actionCreators from './action-creators';
 import ReduxThunk from 'redux-thunk';
@@ -30,7 +31,8 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route component={App}>
-        <Route path="/" component={WorkbooksPage} onEnter={loadWorkbooks} />
+        <Route path="/app/" component={WorkbooksPage} onEnter={loadWorkbooks} />
+        <Route path="/app/viz/:id" component={VizPage} />
       </Route>
     </Router>
   </Provider>,

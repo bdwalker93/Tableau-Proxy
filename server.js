@@ -57,6 +57,8 @@ app.use((req, res, next) => {
     fs.createReadStream(__dirname+'/react/index.html').pipe(res);
   } else if (req.url.match(/^\/bundle.js/)) {
     fs.createReadStream(__dirname+'/react/bundle.js').pipe(res);
+  } else if (req.url.match(/^\/app\/.+/)) {
+    fs.createReadStream(__dirname+'/public/app/index.html').pipe(res);
   } else {
     next();
   }
