@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../action-creators';
 import './VizPage.less';
+import { VizHeader} from './VizHeader';
 
 var BzIframe = React.createClass({
 
@@ -24,7 +25,7 @@ var BzIframe = React.createClass({
 const Viz = ({
 }) =>
   <div className="viz-page">
-    test
+    <VizHeader/>
     <BzIframe onLoad={(iframe)=>{
       if (!  iframe.contentWindow )  return ;
       let $ = iframe.contentWindow.jQuery;

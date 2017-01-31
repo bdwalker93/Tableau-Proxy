@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router'
 
-import moment from 'moment';
-
 import './WorkbookFooter.less';
 
 export const WorkbookFooter = ({
