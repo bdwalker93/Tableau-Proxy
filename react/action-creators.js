@@ -46,7 +46,7 @@ export function loadAllWorkbooks() {
       }],
       "page":{
         "startIndex":0,
-        "maxItems":18
+        "maxItems":999
       },
       "statFields":[
         "hitsTotal",
