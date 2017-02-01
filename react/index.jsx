@@ -23,15 +23,6 @@ const reducer = combineReducers({
 
 const store = createStore(reducer, applyMiddleware(ReduxThunk));
 
-function loadWorkbooks() {
-}
-
-function loadViz({params}) {
-  store.dispatch(actionCreators.loadViz(params.workbookId, params.workbookName, params.viewName));
-}
-
-// Mostly boilerplate, except for the Routes. These are the pages you can go to,
-// which are all wrapped in the App component, which contains the navigation etc
 ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
@@ -53,6 +44,7 @@ ReactDOM.render(
         <Route path="/app/workbooks/:workbookId/views/:workbookName/:viewName"
           component={VizPage}
           onEnter={({params})=> store.dispatch(actionCreators.loadViz(params.workbookId, params.workbookName, params.viewName))} />
+
       </Route>
     </Router>
   </Provider>,
