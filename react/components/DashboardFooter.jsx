@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router'
 
-import './WorkbookFooter.less';
+import './DashboardFooter.less';
 
-export const WorkbookFooter = ({
+export const DashboardFooter = ({
   viewAllWbs,
   viewRecentWbs,
   viewFavoriteWbs
 }) =>
-  <div className="workbook-footer">
+  <div className="dashboard-footer">
     <div className="col-xs-4">
       <a onClick={viewFavoriteWbs}>
         Favorites

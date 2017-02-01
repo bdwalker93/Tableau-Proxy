@@ -23,21 +23,26 @@ var BzIframe = React.createClass({
 });
 
 const Viz = ({
+  site, viewPath
 }) =>
   <div className="viz-page">
     <VizHeader/>
-    <BzIframe onLoad={(iframe)=>{
-      if (!  iframe.contentWindow )  return ;
-      let $ = iframe.contentWindow.jQuery;
-      let t = $('.tableau')[0];
-      let zoom = t.clientWidth / t.scrollWidth * 100;
-      $(t).css({zoom: zoom+'%'});
-    }} src="/t/UCI/views/Project_Spending/JODetailReport?:embed=y&:showVizHome=n&:toolbar=top&:openAuthoringInTopWindow=true&:browserBackButtonUndo=true&:reloadOnCustomViewSave=true&:showShareOptions=true&:size=100,183"/>
+    { site && viewPath ? 
+      <BzIframe onLoad={(iframe)=>{
+        if (!  iframe.contentWindow )  return ;
+        let $ = iframe.contentWindow.jQuery;
+        let t = $('.tableau')[0];
+        let zoom = t.clientWidth / t.scrollWidth * 100;
+        $(t).css({zoom: zoom+'%'});
+      }} src={`/t/${site}/views/${viewPath}?:embed=y&:showVizHome=n&:toolbar=top&:openAuthoringInTopWindow=true&:browserBackButtonUndo=true&:reloadOnCustomViewSave=true&:showShareOptions=true&:size=100,183`}/>
+    : null }
   </div>
 
 function mapStateToProps(state) {
-  // console.log(state.workbooks);
-  return {}
+  return {
+    site: state.viz.site,
+    viewPath: state.viz.viewPath
+  }
 }
 
 export const VizPage = connect(mapStateToProps, actionCreators)(Viz);

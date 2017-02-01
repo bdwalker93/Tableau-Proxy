@@ -6,5 +6,7 @@ import './VizHeader.less';
 export const VizHeader = ({
 }) =>
   <div className="viz-header">
-    header
+    <button onClick={()=>{
+      window.history.back()
+    }}>back</button>
   </div>
