@@ -13,9 +13,9 @@ const Dashboard = ({
   workbookIds,
   addFavoriteWorkbook,
   deleteFavoriteWorkbook,
-  loadDashboard,
-  viewFavoriteDashboard,
-  viewRecentDashboard,
+  loadWorkbooks,
+  viewFavoriteWorkbooks,
+  viewRecentWorkbooks,
   logout
 }) =>
   <div className="dashboard-page">
@@ -37,9 +37,9 @@ const Dashboard = ({
     </div>
     
     <DashboardFooter
-      viewAllWbs={loadDashboard}
-      viewRecentWbs={viewRecentDashboard}
-      viewFavoriteWbs={viewFavoriteDashboard}
+      viewAllWbs={loadWorkbooks}
+      viewRecentWbs={viewRecentWorkbooks}
+      viewFavoriteWbs={viewFavoriteWorkbooks}
     />
 
   </div>
