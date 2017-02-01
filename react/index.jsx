@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, browserHistory } from 'react-router';
+import { Router, Route, Redirect, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { reducer as formReducer } from 'redux-form'
@@ -24,7 +24,6 @@ const reducer = combineReducers({
 const store = createStore(reducer, applyMiddleware(ReduxThunk));
 
 function loadWorkbooks() {
-  store.dispatch(actionCreators.loadWorkbooks());
 }
 
 function loadViz({params}) {
@@ -37,8 +36,23 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route component={App}>
-        <Route path="/app/" component={DashboardPage} onEnter={loadWorkbooks} />
-        <Route path="/app/workbooks/:workbookId/views/:workbookName/:viewName" component={VizPage} onEnter={loadViz} />
+        <Redirect from="/app/" to="/app/workbooks/favorites" />
+
+        <Route path="/app/workbooks/all"
+          component={DashboardPage}
+          onEnter={()=> store.dispatch(actionCreators.loadAllWorkbooks())} />
+
+        <Route path="/app/workbooks/favorites"
+          component={DashboardPage}
+          onEnter={()=> store.dispatch(actionCreators.loadFavoriteWorkbooks())} />
+
+        <Route path="/app/workbooks/recent"
+          component={DashboardPage}
+          onEnter={()=> store.dispatch(actionCreators.loadRecentWorkbooks())} />
+
+        <Route path="/app/workbooks/:workbookId/views/:workbookName/:viewName"
+          component={VizPage}
+          onEnter={({params})=> store.dispatch(actionCreators.loadViz(params.workbookId, params.workbookName, params.viewName))} />
       </Route>
     </Router>
   </Provider>,

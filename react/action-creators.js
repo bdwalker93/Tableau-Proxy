@@ -33,7 +33,7 @@ function getAndDispatchWorkbooks(data) {
   }
 }
 
-export function loadWorkbooks() {
+export function loadAllWorkbooks() {
   return getAndDispatchWorkbooks({
     "method":"getWorkbooks",
     "params":{
@@ -60,7 +60,7 @@ export function loadWorkbooks() {
   })
 }
 
-export function viewFavoriteWorkbooks() {
+export function loadFavoriteWorkbooks() {
   return getAndDispatchWorkbooks({
     "method": "getWorkbooks",
     "params": {
@@ -95,7 +95,7 @@ export function viewFavoriteWorkbooks() {
   });
 }
 
-export function viewRecentWorkbooks() {
+export function loadRecentWorkbooks() {
   return getAndDispatchWorkbooks({
     "method": "getWorkbooks",
     "params": {

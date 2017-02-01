@@ -3,25 +3,15 @@ import { Link } from 'react-router'
 
 import './DashboardFooter.less';
 
-export const DashboardFooter = ({
-  viewAllWbs,
-  viewRecentWbs,
-  viewFavoriteWbs
-}) =>
+export const DashboardFooter = () =>
   <div className="dashboard-footer">
     <div className="col-xs-4">
-      <a onClick={viewFavoriteWbs}>
-        Favorites
-      </a>
+      <Link to="/app/workbooks/favorites">Favorite</Link>
     </div>
     <div className="col-xs-4">
-      <a onClick={viewRecentWbs}>
-        Recent
-      </a>
+      <Link to="/app/workbooks/recent">Recent</Link>
     </div>
     <div className="col-xs-4">
-      <a onClick={viewAllWbs}>
-        All
-      </a>
+      <Link to="/app/workbooks/all">All</Link>
     </div>
   </div>
