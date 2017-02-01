@@ -27,8 +27,8 @@ function loadWorkbooks() {
   store.dispatch(actionCreators.loadWorkbooks());
 }
 
-function loadDefaultView({params:{id}}) {
-  store.dispatch(actionCreators.loadDefaultView(id));
+function loadViz({params}) {
+  store.dispatch(actionCreators.loadViz(params.workbookId, params.workbookName, params.viewName));
 }
 
 // Mostly boilerplate, except for the Routes. These are the pages you can go to,
@@ -38,7 +38,7 @@ ReactDOM.render(
     <Router history={browserHistory}>
       <Route component={App}>
         <Route path="/app/" component={DashboardPage} onEnter={loadWorkbooks} />
-        <Route path="/app/viz/:id" component={VizPage} onEnter={loadDefaultView} />
+        <Route path="/app/workbooks/:workbookId/views/:workbookName/:viewName" component={VizPage} onEnter={loadViz} />
       </Route>
     </Router>
   </Provider>,

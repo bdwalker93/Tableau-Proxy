@@ -174,14 +174,14 @@ export function logout() {
   }
 }
 
-export function loadDefaultView(workbookId) {
+export function loadViz(workbookId, workbookName, viewName) {
   return function(dispatch) {
     request({
       method: 'POST',
       url: '/vizportal/api/web/v1/getSessionInfo',
       data: {"method":"getSessionInfo","params":{}}
     }).then((res) => {
-      let siteUrlName = res.data.result.site.urlName;
+      let siteName = res.data.result.site.urlName;
       request({
         method: 'POST',
         url: '/vizportal/api/web/v1/getViews',
@@ -208,11 +208,11 @@ export function loadDefaultView(workbookId) {
           }
         }
       }).then((res)=>{
-        let views = res.data.result.views;
         dispatch({
-          type: 'SET_VIEW',
-          site: siteUrlName,
-          viewPath: views[0].path
+          type: 'SET_VIZ',
+          site: siteName,
+          views: res.data.result.views,
+          viewPath: workbookName+'/'+viewName
         })
       });
     });
