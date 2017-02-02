@@ -1,16 +1,38 @@
 import request from './lib/request';
 
-function getAndDispatchWorkbooks(data) {
-  return function(dispatch) {
+export function loadMoreWorkbooks() {
+  return function(dispatch, getState) {
     request({
       method: 'POST', 
       url: '/vizportal/api/web/v1/getWorkbooks',
-      data
+      data:{
+        "method":"getWorkbooks",
+        "params":{
+          "order":[{
+            "field":"hitsTotal",
+            "ascending":false
+          },{
+            "field":"name",
+            "ascending":true
+          }],
+          "page":{
+            "startIndex":getState().workbooks.workbookIds.length,
+            "maxItems":6
+          },
+          "statFields":[
+            "hitsTotal",
+            "favoritesTotal",
+            "hitsLastOneMonthTotal",
+            "hitsLastThreeMonthsTotal",
+            "hitsLastTwelveMonthsTotal",
+            "subscriptionsTotal"
+          ]
+        }
+      }
     }).then(res => {
       dispatch({
-        type: 'SET_WORKBOOKS',
-        workbooks: res.data.result.workbooks,
-        favorites: res.data.result.favorites
+        type: 'LOAD_MORE_WORKBOOKS',
+        result: res.data.result,
       });
 
       setTimeout(function() {
@@ -34,33 +56,65 @@ function getAndDispatchWorkbooks(data) {
 }
 
 export function loadAllWorkbooks() {
-  return getAndDispatchWorkbooks({
-    "method":"getWorkbooks",
-    "params":{
-      "order":[{
-        "field":"hitsTotal",
-        "ascending":false
-      },{
-        "field":"name",
-        "ascending":true
-      }],
-      "page":{
-        "startIndex":0,
-        "maxItems":999
-      },
-      "statFields":[
-        "hitsTotal",
-        "favoritesTotal",
-        "hitsLastOneMonthTotal",
-        "hitsLastThreeMonthsTotal",
-        "hitsLastTwelveMonthsTotal",
-        "subscriptionsTotal"
-      ]
-    }
-  })
+  return function(dispatch) {
+    request({
+      method: 'POST', 
+      url: '/vizportal/api/web/v1/getWorkbooks',
+      data:{
+        "method":"getWorkbooks",
+        "params":{
+          "order":[{
+            "field":"hitsTotal",
+            "ascending":false
+          },{
+            "field":"name",
+            "ascending":true
+          }],
+          "page":{
+            "startIndex":0,
+            "maxItems":6
+          },
+          "statFields":[
+            "hitsTotal",
+            "favoritesTotal",
+            "hitsLastOneMonthTotal",
+            "hitsLastThreeMonthsTotal",
+            "hitsLastTwelveMonthsTotal",
+            "subscriptionsTotal"
+          ]
+        }
+      }
+    }).then(res => {
+      dispatch({
+        type: 'LOAD_INITIAL_WORKBOOKS',
+        result: res.data.result,
+        loadMore: function() {
+          dispatch(loadMoreWorkbooks());
+        }
+      });
+
+      setTimeout(function() {
+        res.data.result.workbooks.forEach((wb)=>{
+          request({
+            method: 'POST', 
+            url: '/vizportal/api/web/v1/getWorkbook',
+            data:{"method":"getWorkbook","params":{"id":wb.id}}
+          }).then(res => {
+            dispatch({
+              type: 'UPDATE_WORKBOOK',
+              id: wb.id,
+              ownerName: res.data.result.owner.displayName,
+              projectName: res.data.result.project.name
+            });
+          });
+        })
+      }, 100)
+    });
+  }
 }
 
 export function loadFavoriteWorkbooks() {
+  return null;
   return getAndDispatchWorkbooks({
     "method": "getWorkbooks",
     "params": {
@@ -96,6 +150,7 @@ export function loadFavoriteWorkbooks() {
 }
 
 export function loadRecentWorkbooks() {
+  return null;
   return getAndDispatchWorkbooks({
     "method": "getWorkbooks",
     "params": {

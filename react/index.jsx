@@ -31,15 +31,18 @@ ReactDOM.render(
 
         <Route path="/app/workbooks/all"
           component={DashboardPage}
-          onEnter={()=> store.dispatch(actionCreators.loadAllWorkbooks())} />
+          onEnter={()=>{
+            store.dispatch(actionCreators.loadAllWorkbooks());
+          }}
+        />
 
+      {/*
         <Route path="/app/workbooks/favorites"
-          component={DashboardPage}
-          onEnter={()=> store.dispatch(actionCreators.loadFavoriteWorkbooks())} />
+          component={DashboardPage('loadFavoriteWorkbooks')} />
 
         <Route path="/app/workbooks/recent"
-          component={DashboardPage}
-          onEnter={()=> store.dispatch(actionCreators.loadRecentWorkbooks())} />
+          component={DashboardPage('loadRecentWorkbooks')} />
+          */}
 
         <Route path="/app/workbooks/:workbookId/views/:workbookName/:viewName"
           component={VizPage}
