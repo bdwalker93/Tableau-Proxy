@@ -28,7 +28,7 @@ function getWorkbookRequest(options={}) {
   })
 }
 
-function updateWorkbooks(workbooks) {
+function updateWorkbooks(workbooks=[]) {
   return function(dispatch) {
     workbooks.forEach((wb)=>{
       request({
@@ -47,11 +47,12 @@ function updateWorkbooks(workbooks) {
   }
 }
 
-export function loadMoreWorkbooks() {
+export function loadMoreWorkbooks(options={}) {
   return function(dispatch, getState) {
     getWorkbookRequest({
+      ...options,
       page: {
-        startIndex:getState().workbooks.workbookIds.length,
+        startIndex: getState().workbooks.workbookIds.length,
         maxItems:6
       }
     }).then((res)=>{
@@ -75,75 +76,49 @@ export function loadAllWorkbooks() {
 }
 
 export function loadFavoriteWorkbooks() {
-  return null;
-  return getAndDispatchWorkbooks({
-    "method": "getWorkbooks",
-    "params": {
-      "filter": {
-        "operator": "and",
-        "clauses": [{
-          "operator": "eq",
-          "field": "isFavorite",
-          "value": true
-        }]
-      },
-      "order": [{
-        "field": "hitsTotal",
-        "ascending": false
-      }, {
-        "field": "name",
-        "ascending": true
-      }],
-      "page": {
-        "startIndex": 0,
-        "maxItems": 18
-      },
-      "statFields": [
-        "hitsTotal",
-        "favoritesTotal",
-        "hitsLastOneMonthTotal",
-        "hitsLastThreeMonthsTotal",
-        "hitsLastTwelveMonthsTotal",
-        "subscriptionsTotal"
-      ]
+  const options = {
+    "filter": {
+      "operator": "and",
+      "clauses": [{
+        "operator": "eq",
+        "field": "isFavorite",
+        "value": true
+      }]
     }
-  });
+  }
+  return function(dispatch) {
+    getWorkbookRequest(options).then((res)=>{
+      dispatch({
+        type: 'LOAD_INITIAL_WORKBOOKS',
+        result: res.data.result,
+        loadMore: ()=> dispatch(loadMoreWorkbooks(options))
+      });
+      setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
+    });
+  }
 }
 
 export function loadRecentWorkbooks() {
-  return null;
-  return getAndDispatchWorkbooks({
-    "method": "getWorkbooks",
-    "params": {
-      "filter": {
-        "operator": "and",
-        "clauses": [{
-          "operator": "eq",
-          "field": "isRecent",
-          "value": true
-        }]
-      },
-      "order": [{
-        "field": "hitsTotal",
-        "ascending": false
-      }, {
-        "field": "name",
-        "ascending": true
-      }],
-      "page": {
-        "startIndex": 0,
-        "maxItems": 18
-      },
-      "statFields": [
-        "hitsTotal",
-        "favoritesTotal",
-        "hitsLastOneMonthTotal",
-        "hitsLastThreeMonthsTotal",
-        "hitsLastTwelveMonthsTotal",
-        "subscriptionsTotal"
-      ]
+  const options = {
+    "filter": {
+      "operator": "and",
+      "clauses": [{
+        "operator": "eq",
+        "field": "isRecent",
+        "value": true
+      }]
     }
-  });
+  }
+  return function(dispatch) {
+    getWorkbookRequest(options).then((res)=>{
+      dispatch({
+        type: 'LOAD_INITIAL_WORKBOOKS',
+        result: res.data.result,
+        loadMore: ()=> dispatch(loadMoreWorkbooks(options))
+      });
+      setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
+    });
+  }
 }
 
 export function addFavoriteWorkbook(workbookId) {

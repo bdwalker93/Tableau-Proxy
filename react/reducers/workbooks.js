@@ -7,7 +7,7 @@ const init = {
   loadMore: function(){},
 }
 
-const reduceWorkbooks = (workbooks, favorites) => {
+const reduceWorkbooks = (workbooks=[], favorites=[]) => {
   return workbooks.reduce((memo, wb) => {
     let obj = {...memo.workbooksById};
 
@@ -49,7 +49,7 @@ export default function(state = init, action) {
         workbooksById
       } = reduceWorkbooks(action.result.workbooks, action.result.favorites);
       console.log('???', workbookIds, workbooksById);
-      let newState =  {
+      let newState = {
         workbookIds: uniq([...state.workbookIds, ...workbookIds]),
         workbooksById: {...state.workbooksById, ...workbooksById},
         hasMore: action.result.moreItems,
