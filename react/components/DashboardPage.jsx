@@ -26,7 +26,7 @@ const Dashboard = (props) => {
 
   return <div className="dashboard-page">
 
-    <DashboardHeader logout={logout} />
+    <DashboardHeader logout={logout} total={workbookIds.length}/>
 
     <div className="dashboard-content">
       <InfiniteScroll
@@ -36,6 +36,7 @@ const Dashboard = (props) => {
         hasMore={hasMore}
         loader={<div className="loader">Loading ...</div>}
         useWindow={true}
+        threshold={500}
       >
         { workbookIds.map(id => <WorkbookListItem key={id}
           workbook={workbooksById[id]} isFav={workbooksById[id].isFavorite}

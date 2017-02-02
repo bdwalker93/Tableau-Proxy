@@ -205,6 +205,15 @@ export function loadViz(workbookId, workbookName, viewName) {
           views: res.data.result.views,
           viewPath: workbookName+'/'+viewName
         })
+
+        request({
+          method: 'POST',
+          url: '/vizportal/api/web/v1/markRecentlyViewed',
+          data: {
+            "method":"markRecentlyViewed",
+            "params":{"objectId":workbookId,"objectType":"workbook"}
+          }
+        });
       });
     });
   }
