@@ -5,6 +5,7 @@ const init = {
   workbooksById: {},
   hasMore: true,
   loadMore: function(){},
+  loadingMore: false
 }
 
 const reduceWorkbooks = (workbooks=[], favorites=[]) => {
@@ -63,6 +64,9 @@ function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
 
 export default function(state = init, action) {
   switch (action.type) {
+    case 'BUSY_LOADING_MORE': {
+      return { ...state, loadingMore: true }
+    }
     case 'LOAD_INITIAL_WORKBOOKS': {
       const {
         workbookIds,
@@ -70,12 +74,12 @@ export default function(state = init, action) {
         hasMore
       } = combineResult(action.workbooksResult, action.viewsResult);
 
-      console.log(workbookIds, workbooksById);
       return {
         workbookIds,
         workbooksById,
         hasMore,
-        loadMore: action.loadMore
+        loadMore: action.loadMore,
+        loadingMore: false
       }
     }
     case 'LOAD_MORE_WORKBOOKS': {
@@ -90,6 +94,7 @@ export default function(state = init, action) {
         workbooksById: {...state.workbooksById, ...workbooksById},
         loadMore: state.loadMore,
         hasMore,
+        loadingMore: false
       }
 
       return newState
