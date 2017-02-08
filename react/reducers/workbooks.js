@@ -93,7 +93,7 @@ export default function(state = init, action) {
     }
     case 'UPDATE_WORKBOOK': {
       let obj = {...state.workbooksById};
-      let wb = obj[action.id];
+      let wb = obj[action.key];
       if (!wb) return state;
       wb.ownerName = action.ownerName;
       wb.projectName = action.projectName;

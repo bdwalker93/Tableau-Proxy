@@ -21,17 +21,25 @@ function getWorkbookRequest(method, options={}) {
   })
 }
 
-function updateWorkbooks(workbooks=[]) {
-  return function(dispatch) {
-    workbooks.forEach((wb)=>{
+function updateWorkbooks() {
+  return function(dispatch, getState) {
+    const state = getState().workbooks;
+    state.workbookIds.forEach(key=>{
+      const {
+        id,
+        workbookId,
+        isWorkbook,
+      } = state.workbooksById[key];
       request({
         method: 'POST', 
         url: '/vizportal/api/web/v1/getWorkbook',
-        data:{"method":"getWorkbook","params":{"id":wb.id}}
+        data:{"method":"getWorkbook","params":{
+          "id": isWorkbook ? id : workbookId
+        }}
       }).then(res => {
         dispatch({
           type: 'UPDATE_WORKBOOK',
-          id: wb.id,
+          key,
           ownerName: res.data.result.owner.displayName,
           projectName: res.data.result.project.name
         });
@@ -79,7 +87,7 @@ export function loadFavoriteWorkbooks() {
       }]
     }
   }
-  return function(dispatch) {
+  return function(dispatch, getState) {
     Promise.all([
       getWorkbookRequest("getWorkbooks", options),
       getWorkbookRequest("getViews", options)
@@ -90,15 +98,8 @@ export function loadFavoriteWorkbooks() {
         viewsResult: vRes.data.result,
         loadMore: ()=> {}//dispatch(loadMoreWorkbooks("getViews", options))
       });
-    })
-    //  .then((res)=>{
-    //  dispatch({
-    //    type: 'LOAD_INITIAL_WORKBOOKS',
-    //    result: res.data.result,
-    //    loadMore: ()=> dispatch(loadMoreWorkbooks("getViews", options))
-    //  });
-    //  setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
-    //});
+      setTimeout(()=>dispatch(updateWorkbooks()), 100);
+    });
   }
 }
 
@@ -113,14 +114,14 @@ export function loadRecentWorkbooks() {
       }]
     }
   }
-  return function(dispatch) {
+  return function(dispatch, getState) {
     getWorkbookRequest(options).then((res)=>{
       dispatch({
         type: 'LOAD_INITIAL_WORKBOOKS',
         result: res.data.result,
         loadMore: ()=> dispatch(loadMoreWorkbooks(options))
       });
-      setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
+      //      setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
     });
   }
 }
