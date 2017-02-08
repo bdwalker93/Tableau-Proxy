@@ -108,18 +108,7 @@ export function loadAllWorkbooks() {
   }
 }
 
-export function loadFavoriteWorkbooks() {
-  const options = {
-    "filter": {
-      "operator": "and",
-      "clauses": [{
-        "operator": "eq",
-        "field": "isFavorite",
-        "value": true
-      }]
-    }
-  }
-
+function loadWorkbooks (options) {
   return function(dispatch, getState) {
     Promise.all([
       getWorkbookRequest("getWorkbooks", options),
@@ -136,8 +125,21 @@ export function loadFavoriteWorkbooks() {
   }
 }
 
+export function loadFavoriteWorkbooks() {
+  return loadWorkbooks({
+    "filter": {
+      "operator": "and",
+      "clauses": [{
+        "operator": "eq",
+        "field": "isFavorite",
+        "value": true
+      }]
+    }
+  });
+}
+
 export function loadRecentWorkbooks() {
-  const options = {
+  return loadWorkbooks({
     "filter": {
       "operator": "and",
       "clauses": [{
@@ -146,17 +148,7 @@ export function loadRecentWorkbooks() {
         "value": true
       }]
     }
-  }
-  return function(dispatch, getState) {
-    getWorkbookRequest(options).then((res)=>{
-      dispatch({
-        type: 'LOAD_INITIAL_WORKBOOKS',
-        result: res.data.result,
-        loadMore: ()=> dispatch(loadMoreWorkbooks(options))
-      });
-      //      setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
-    });
-  }
+  });
 }
 
 export function addFavoriteWorkbook(workbookId) {
