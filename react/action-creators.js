@@ -106,10 +106,10 @@ export function loadMoreWorkbooks(options={}, shouldGetViews=false) {
 }
 
 export function loadAllWorkbooks() {
-  return loadWorkbooks({}, false);
+  return loadWorkbooks();
 }
 
-function loadWorkbooks (options, shouldGetViews=false) {
+function loadWorkbooks (options={}, shouldGetViews=false) {
   return function(dispatch, getState) {
     Promise.all([
       getWorkbookRequest("getWorkbooks", options),
@@ -119,7 +119,7 @@ function loadWorkbooks (options, shouldGetViews=false) {
         type: 'LOAD_INITIAL_WORKBOOKS',
         workbooksResult: wbRes.data.result,
         viewsResult: shouldGetViews ? vRes.data.result : undefined,
-        loadMore: () => dispatch(loadMoreWorkbooks(options, true))
+        loadMore: () => dispatch(loadMoreWorkbooks(options, shouldGetViews))
       });
       setTimeout(()=>dispatch(updateWorkbooks()), 100);
     });
