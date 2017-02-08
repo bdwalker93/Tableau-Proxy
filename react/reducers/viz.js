@@ -7,8 +7,12 @@ const init = {
 export default function(state = init, action) {
   switch (action.type) {
     case 'SET_VIZ': {
+      let favIds = action.viewsResult.favorites;
       return {
-        views: action.views,
+        views: action.viewsResult.views.map(view => ({
+          ...view,
+          isFavorite: ~favIds.indexOf(view.id)
+        })),
         site: action.site,
         viewPath: action.viewPath
       }

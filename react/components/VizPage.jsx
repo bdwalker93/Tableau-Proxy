@@ -23,10 +23,12 @@ var BzIframe = React.createClass({
 });
 
 const Viz = ({
-  site, viewPath
+  site,
+  views,
+  viewPath,
 }) =>
   <div className="viz-page">
-    <VizHeader />
+    <VizHeader views={views} />
     { site && viewPath ? 
       <BzIframe onLoad={(iframe)=>{
         if (!  iframe.contentWindow )  return ;
@@ -39,9 +41,11 @@ const Viz = ({
   </div>
 
 function mapStateToProps(state) {
+  console.log('STATE', state.viz.views);
   return {
     site: state.viz.site,
-    viewPath: state.viz.viewPath
+    views: state.viz.views,
+    viewPath: state.viz.viewPath,
   }
 }
 

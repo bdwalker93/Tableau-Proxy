@@ -247,7 +247,7 @@ export function loadViz(workbookId, workbookName, viewName) {
         dispatch({
           type: 'SET_VIZ',
           site: siteName,
-          views: res.data.result.views,
+          viewsResult: res.data.result,
           viewPath: workbookName+'/'+viewName
         })
 
