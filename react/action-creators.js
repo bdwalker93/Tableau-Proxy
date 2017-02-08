@@ -1,6 +1,6 @@
 import request from './lib/request';
 
-function getWorkbookRequest(options={}) {
+function getWorkbookRequest(method, options={}) {
   const defaultOrder = [
     { field:"hitsTotal", ascending:false },
     { field:"name", ascending:true }
@@ -8,21 +8,14 @@ function getWorkbookRequest(options={}) {
   const defaultPage = { startIndex: 0, maxItems: 6 };
   return request({
     method: 'POST', 
-    url: '/vizportal/api/web/v1/getWorkbooks',
+    url: '/vizportal/api/web/v1/'+method,
     data:{
-      "method":"getWorkbooks",
+      "method":method,
       "params":{
         "filter": options.filter,
         "order": options.order || defaultOrder,
         "page": options.page || defaultPage,
-        "statFields":[
-          "hitsTotal",
-          "favoritesTotal",
-          "hitsLastOneMonthTotal",
-          "hitsLastThreeMonthsTotal",
-          "hitsLastTwelveMonthsTotal",
-          "subscriptionsTotal"
-        ]
+        "statFields":[]
       }
     }
   })
@@ -47,9 +40,9 @@ function updateWorkbooks(workbooks=[]) {
   }
 }
 
-export function loadMoreWorkbooks(options={}) {
+export function loadMoreWorkbooks(method, options={}) {
   return function(dispatch, getState) {
-    getWorkbookRequest({
+    getWorkbookRequest(method, {
       ...options,
       page: {
         startIndex: getState().workbooks.workbookIds.length,
@@ -64,11 +57,11 @@ export function loadMoreWorkbooks(options={}) {
 
 export function loadAllWorkbooks() {
   return function(dispatch) {
-    getWorkbookRequest().then((res)=>{
+    getWorkbookRequest("getWorkbooks").then((res)=>{
       dispatch({
         type: 'LOAD_INITIAL_WORKBOOKS',
         result: res.data.result,
-        loadMore: ()=> dispatch(loadMoreWorkbooks())
+        loadMore: ()=> dispatch(loadMoreWorkbooks("getWorkbooks"))
       });
       setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
     });
@@ -87,14 +80,25 @@ export function loadFavoriteWorkbooks() {
     }
   }
   return function(dispatch) {
-    getWorkbookRequest(options).then((res)=>{
+    Promise.all([
+      getWorkbookRequest("getWorkbooks", options),
+      getWorkbookRequest("getViews", options)
+    ]).then(([wbRes, vRes]) => {
       dispatch({
         type: 'LOAD_INITIAL_WORKBOOKS',
-        result: res.data.result,
-        loadMore: ()=> dispatch(loadMoreWorkbooks(options))
+        workbooksResult: wbRes.data.result,
+        viewsResult: vRes.data.result,
+        loadMore: ()=> {}//dispatch(loadMoreWorkbooks("getViews", options))
       });
-      setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
-    });
+    })
+    //  .then((res)=>{
+    //  dispatch({
+    //    type: 'LOAD_INITIAL_WORKBOOKS',
+    //    result: res.data.result,
+    //    loadMore: ()=> dispatch(loadMoreWorkbooks("getViews", options))
+    //  });
+    //  setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
+    //});
   }
 }
 

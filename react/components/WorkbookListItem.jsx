@@ -12,6 +12,7 @@ export const WorkbookListItem = ({
     projectName,
     defaultViewUrl,
     updatedAt,
+    isWorkbook,
     size
   },
   isFav,
@@ -23,7 +24,7 @@ export const WorkbookListItem = ({
       <img className="workbook-thumbnail" src={'/'+thumbnailUrl} />
     </Link>
   </div>
-  <div className="col-xs-6">
+  <div className={`col-xs-6 ${isWorkbook ? 'workbook-frame' : 'view-frame'}`}>
     <p>{name}</p>
     <p>{ownerName}</p>
     <p>{moment(updatedAt).format('L, LT')}</p>

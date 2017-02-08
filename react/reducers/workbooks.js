@@ -28,17 +28,50 @@ const reduceWorkbooks = (workbooks=[], favorites=[]) => {
   }, init);      
 }
 
+
+function combineResult (wbRes, vRes) {
+  let wbObj = reduceWorkbooks(wbRes.workbooks, wbRes.favorites);
+  let vObj = reduceWorkbooks(vRes.views, vRes.favorites);
+  let list = [];
+  let map = {};
+  wbObj.workbookIds.forEach(id=> {
+    list.push('workbook:'+id);
+  })
+  vObj.workbookIds.forEach(id=> {
+    list.push('view:'+id);
+  })
+  Object.keys(wbObj.workbooksById).forEach(id=> {
+    let wb = wbObj.workbooksById[id];
+    wb.isWorkbook = true;
+    map['workbook:'+id] = wb;
+  })
+  Object.keys(vObj.workbooksById).forEach(id=> {
+    let wb = vObj.workbooksById[id];
+    wb.isWorkbook = false;
+    map['view:'+id] = wb;
+  })
+
+  return {
+    workbookIds: list,
+    workbooksById: map,
+    hasMore: wbRes.moreItems || vRes.moreItems
+  }
+}
+
 export default function(state = init, action) {
   switch (action.type) {
     case 'LOAD_INITIAL_WORKBOOKS': {
       const {
         workbookIds,
-        workbooksById
-      } = reduceWorkbooks(action.result.workbooks, action.result.favorites);
+        workbooksById,
+        hasMore
+      } = combineResult(action.workbooksResult, action.viewsResult);
+
+      console.log(workbookIds, workbooksById);
       return {
         workbookIds,
         workbooksById,
-        hasMore: action.result.moreItems,
+        hasMore,
         loadMore: action.loadMore
       }
     }
