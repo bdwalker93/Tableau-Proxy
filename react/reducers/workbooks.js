@@ -29,7 +29,9 @@ const reduceWorkbooks = (workbooks=[], favorites=[]) => {
 }
 
 
-function combineResult (wbRes, vRes) {
+const emptyViewResult = { views:[], favorites:[] };
+
+function combineResult (wbRes, vRes=emptyViewResult) {
   let wbObj = reduceWorkbooks(wbRes.workbooks, wbRes.favorites);
   let vObj = reduceWorkbooks(vRes.views, vRes.favorites);
   let list = [];
@@ -76,19 +78,19 @@ export default function(state = init, action) {
       }
     }
     case 'LOAD_MORE_WORKBOOKS': {
-      console.log('!!!', action.result);
       const {
         workbookIds,
-        workbooksById
-      } = reduceWorkbooks(action.result.workbooks, action.result.favorites);
-      console.log('???', workbookIds, workbooksById);
+        workbooksById,
+        hasMore
+      } = combineResult(action.workbooksResult, action.viewsResult);
+
       let newState = {
         workbookIds: uniq([...state.workbookIds, ...workbookIds]),
         workbooksById: {...state.workbooksById, ...workbooksById},
-        hasMore: action.result.moreItems,
-        loadMore: state.loadMore
+        loadMore: state.loadMore,
+        hasMore,
       }
-      console.log(newState);
+
       return newState
     }
     case 'UPDATE_WORKBOOK': {
