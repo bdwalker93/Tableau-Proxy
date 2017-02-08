@@ -29,9 +29,10 @@ const reduceWorkbooks = (workbooks=[], favorites=[]) => {
 }
 
 
-const emptyViewResult = { views:[], favorites:[] };
+const emptyViewsResult = { views:[], favorites:[] };
+const emptyWorkbooksResult = { workbooks:[], favorites:[] };
 
-function combineResult (wbRes, vRes=emptyViewResult) {
+function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
   let wbObj = reduceWorkbooks(wbRes.workbooks, wbRes.favorites);
   let vObj = reduceWorkbooks(vRes.views, vRes.favorites);
   let list = [];
