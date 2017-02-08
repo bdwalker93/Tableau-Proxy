@@ -47,10 +47,12 @@ function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
   Object.keys(wbObj.workbooksById).forEach(id=> {
     let wb = wbObj.workbooksById[id];
     wb.isWorkbook = true;
+    wb.workbookId = wb.id;
     map['workbook:'+id] = wb;
   })
   Object.keys(vObj.workbooksById).forEach(id=> {
     let wb = vObj.workbooksById[id];
+    wb.defaultViewUrl = wb.path;
     wb.isWorkbook = false;
     map['view:'+id] = wb;
   })

@@ -26,7 +26,7 @@ const Viz = ({
   site, viewPath
 }) =>
   <div className="viz-page">
-    <VizHeader/>
+    <VizHeader />
     { site && viewPath ? 
       <BzIframe onLoad={(iframe)=>{
         if (!  iframe.contentWindow )  return ;
