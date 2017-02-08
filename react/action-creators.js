@@ -48,41 +48,47 @@ function updateWorkbooks() {
   }
 }
 
-export function loadMoreViews(options={}) {
-  return function(dispatch, getState) {
-    getWorkbookRequest("getViews", {
-      ...options,
-      page: {
-        startIndex: getState().workbooks.workbookIds.length,
-        maxItems:6
-      }
-    }).then((res)=>{
-      dispatch({ type: 'LOAD_MORE_WORKBOOKS', result: res.data.result });
-      setTimeout(()=>dispatch(updateWorkbooks(res.data.result.workbooks)), 100);
-    });
-  }
-}
-
 function countMapItemsOnCondition(items, condition) {
   return Object.keys(items).reduce((acc, key) => {
     return condition(items[key]) ? acc+1 : acc;
   }, 0);
 }
 
-export function loadMoreWorkbooks(options={}) {
+export function loadMoreWorkbooks(options={}, shouldGetViews=false) {
   return function(dispatch, getState) {
     let map = getState().workbooks.workbooksById;
+    let wbCount = countMapItemsOnCondition(map, i => i.isWorkbook);
+    let maxItems = 6;
 
-    getWorkbookRequest("getWorkbooks", {
-      ...options,
-      page: {
-        startIndex: countMapItemsOnCondition(map, i => i.isWorkbook),
-        maxItems:6
-      }
-    }).then((res)=>{
+    let promises = [];
+    promises.push(
+      getWorkbookRequest("getWorkbooks", {
+        ...options,
+        page: {
+          startIndex: wbCount,
+          maxItems
+        }
+      })
+    )
+
+    if (shouldGetViews) {
+      let vCount = countMapItemsOnCondition(map, i => !i.isWorkbook);
+      promises.push(
+        getWorkbookRequest("getViews", {
+          ...options,
+          page: {
+            startIndex: vCount,
+            maxItems
+          }
+        })
+      )
+    }
+      
+    Promise.all(promises).then(([wbRes, vRes])=>{
       dispatch({
         type: 'LOAD_MORE_WORKBOOKS',
-        workbooksResult: res.data.result
+        workbooksResult: wbRes.data.result,
+        viewsResult: vRes.data.result
       });
       setTimeout(()=>dispatch(updateWorkbooks()), 100);
     });
@@ -114,20 +120,16 @@ export function loadFavoriteWorkbooks() {
     }
   }
 
-  function getWorkbookAndViewRequest(options) {
-    return Promise.all([
+  return function(dispatch, getState) {
+    Promise.all([
       getWorkbookRequest("getWorkbooks", options),
       getWorkbookRequest("getViews", options)
-    ])
-  }
-
-  return function(dispatch, getState) {
-    getWorkbookAndViewRequest(options).then(([wbRes, vRes]) => {
+    ]).then(([wbRes, vRes]) => {
       dispatch({
         type: 'LOAD_INITIAL_WORKBOOKS',
         workbooksResult: wbRes.data.result,
         viewsResult: vRes.data.result,
-        loadMore: () => dispatch(loadMoreWorkbooks(options))
+        loadMore: () => dispatch(loadMoreWorkbooks(options, true))
       });
       setTimeout(()=>dispatch(updateWorkbooks()), 100);
     });
