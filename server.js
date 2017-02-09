@@ -46,6 +46,7 @@ rootModifications.push({
   }
 });
 
+app.use('/node_modules', express.static('node_modules/'));
 app.use(express.static('public'));
 
 app.use((req, res, next) => {

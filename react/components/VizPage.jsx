@@ -47,9 +47,13 @@ const Viz = ({
               }
             }} isFavorite={view.isFavorite}/>
           <Link to={`/app/workbooks/${tab}/${view.workbookId}/views/${view.path}`}>{view.name}</Link>
+          { viewPath === view.path ? 
+              <i className="fa fa-check" aria-hidden="true"></i>
+              : null 
+          }
         </div>)}
         </Popover>}>
-        <Button>Click w/rootClose</Button>
+        <Button>views</Button>
       </OverlayTrigger>
     </div>
 
