@@ -17,6 +17,15 @@ export default function(state = init, action) {
         viewPath: action.viewPath
       }
     }
+    case 'UPDATE_VIZ_FAV': {
+      let views = [...state.views];
+      let viz = views.find(v=>v.id === action.id);
+      if (!viz) return state;
+      viz.isFavorite = action.isFavorite;
+      return {
+        ...state, views
+      }
+    }
   }
   return state
 }

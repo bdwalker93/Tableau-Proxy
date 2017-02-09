@@ -152,49 +152,61 @@ export function loadRecentWorkbooks() {
   }, true);
 }
 
-const updateFav = (dispatch, id, isFavorite) => dispatch({
-  type: 'UPDATE_WORKBOOK_FAV', id, isFavorite
-});
-
-export function addFavoriteWorkbook(workbookId) {
+export function addFavoriteWorkbook(key) {
   return function(dispatch, getState) {
-    const {
-      id,
-      isWorkbook
-    }= getState().workbooks.workbooksById[workbookId];
-    updateFav(dispatch, workbookId, true);
+    const { id } = getState().workbooks.workbooksById[key];
+    dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: key, isFavorite: true });
     request({
       method: 'POST', 
       url: "/vizportal/api/web/v1/addFavorite",
       data:{
         "method":"addFavorite",
-        "params":{
-          "objectId": id,
-          "objectType": isWorkbook ? 'workbook' : 'view'
-        }
+        "params":{ "objectId": id, "objectType": 'workbook' }
       }
-    }).catch(res => updateFav(dispatch, workbookId, false))
+    }).catch(()=> dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: key, isFavorite: false }));
   }
 }
 
-export function deleteFavoriteWorkbook(workbookId) {
+export function deleteFavoriteWorkbook(key) {
   return function(dispatch, getState) {
-    const {
-      id,
-      isWorkbook
-    }= getState().workbooks.workbooksById[workbookId];
-    updateFav(dispatch, workbookId, false);
+    const { id } = getState().workbooks.workbooksById[key];
+    dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: key, isFavorite: false });
     request({
       method: 'POST', 
       url: "/vizportal/api/web/v1/removeFavorite",
       data:{
         "method":"removeFavorite",
-        "params":{
-          "objectId": id,
-          "objectType": isWorkbook ? 'workbook' : 'view'
-        }
+        "params":{ "objectId": id, "objectType": 'workbook' }
       }
-    }).catch(err => updateFav(dispatch, workbookId, true));
+    }).catch(()=> dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: key, isFavorite: true }));
+  }
+}
+
+export function addFavoriteView(id) {
+  return function(dispatch, getState) {
+    dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: true });
+    request({
+      method: 'POST', 
+      url: "/vizportal/api/web/v1/addFavorite",
+      data:{
+        "method":"addFavorite",
+        "params":{ "objectId": id, "objectType": 'view' }
+      }
+    }).catch(()=> dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: false }));
+  }
+}
+
+export function deleteFavoriteView(id) {
+  return function(dispatch, getState) {
+    dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: false });
+    request({
+      method: 'POST', 
+      url: "/vizportal/api/web/v1/removeFavorite",
+      data:{
+        "method":"removeFavorite",
+        "params":{ "objectId": id, "objectType": 'view' }
+      }
+    }).catch(()=> dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: true }));
   }
 }
 

@@ -5,6 +5,7 @@ import './VizPage.less';
 import { Button, Popover, OverlayTrigger } from 'react-bootstrap';
 import { Link } from 'react-router';
 import './VizHeader.less';
+import FavoriteStar from './FavoriteStar';
 
 var BzIframe = React.createClass({
 
@@ -24,26 +25,28 @@ var BzIframe = React.createClass({
   }
 });
 
-function popoverContent(views) {
-  return <Popover id="popover-trigger-click-root-close" title="Popover bottom">
-    <ul>
-      {views.map(view=><li key={view.id}>
-        <span>{view.isFavorite ? 'fav' : 'nofav'}</span>
-        <Link to={`/app/workbooks/${view.workbookId}/views/${view.path}`}>{view.name}</Link>
-      </li>)}
-
-    </ul>
-  </Popover>;
-}
-
 const Viz = ({
   site,
   views,
   viewPath,
+  deleteFavoriteView,
+  addFavoriteView
 }) => <div className="viz-page">
     <div className="viz-header">
       <Button onClick={()=>window.history.back()}>back</Button>
-      <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={popoverContent(views)}>
+      <OverlayTrigger trigger="click" rootClose
+        placement="bottom" overlay={<Popover id="view-switcher">
+          {views.map(view=><div key={view.id}>
+            <FavoriteStar onClick={()=>{
+              if ( view.isFavorite ) {
+                deleteFavoriteView(view.id);
+              } else {
+                addFavoriteView(view.id);
+              }
+            }} isFavorite={view.isFavorite}/>
+          <Link to={`/app/workbooks/${view.workbookId}/views/${view.path}`}>{view.name}</Link>
+        </div>)}
+        </Popover>}>
         <Button>Click w/rootClose</Button>
       </OverlayTrigger>
     </div>

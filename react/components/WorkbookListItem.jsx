@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router'
+import { Link } from 'react-router';
+import FavoriteStar from './FavoriteStar';
 
 import moment from 'moment';
 
@@ -30,12 +31,6 @@ export const WorkbookListItem = ({
     <p>{ownerName}</p>
     <p>{moment(updatedAt).format('L, LT')}</p>
     <p>{projectName}</p>
-    <a className="fav-star" onClick={onFavorite}>
-      { isFav ? 
-        <img src="/img/star_selected_small_normal.svg"/>
-          : 
-        <img src="/img/star_empty_small_hover.svg"/>
-      }
-    </a>
+    <FavoriteStar onClick={onFavorite} isFavorite={isFav}/>
   </div>
 </div>
