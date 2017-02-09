@@ -6,6 +6,7 @@ import { Button, Popover, OverlayTrigger } from 'react-bootstrap';
 import { Link } from 'react-router';
 import './VizHeader.less';
 import FavoriteStar from './FavoriteStar';
+import { browserHistory } from 'react-router';
 
 var BzIframe = React.createClass({
 
@@ -26,6 +27,7 @@ var BzIframe = React.createClass({
 });
 
 const Viz = ({
+  params: { tab },
   site,
   views,
   viewPath,
@@ -33,7 +35,7 @@ const Viz = ({
   addFavoriteView
 }) => <div className="viz-page">
     <div className="viz-header">
-      <Button onClick={()=>window.history.back()}>back</Button>
+      <Button onClick={()=>browserHistory.push('/app/workbooks/'+tab)}>back</Button>
       <OverlayTrigger trigger="click" rootClose
         placement="bottom" overlay={<Popover id="view-switcher">
           {views.map(view=><div key={view.id}>
@@ -44,7 +46,7 @@ const Viz = ({
                 addFavoriteView(view.id);
               }
             }} isFavorite={view.isFavorite}/>
-          <Link to={`/app/workbooks/${view.workbookId}/views/${view.path}`}>{view.name}</Link>
+          <Link to={`/app/workbooks/${tab}/${view.workbookId}/views/${view.path}`}>{view.name}</Link>
         </div>)}
         </Popover>}>
         <Button>Click w/rootClose</Button>

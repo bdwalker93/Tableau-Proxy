@@ -5,6 +5,7 @@ import FavoriteStar from './FavoriteStar';
 import moment from 'moment';
 
 export const WorkbookListItem = ({
+  tab,
   workbook: {
     id,
     thumbnailUrl,
@@ -22,7 +23,7 @@ export const WorkbookListItem = ({
 }) =>
 <div className={`row workbook-item ${parseInt(size) > 1 ? 'multi' : ''}`}>
   <div className="col-xs-6">
-    <Link to={`/app/workbooks/${workbookId}/views/${defaultViewUrl}`}  className="workbook-thumbnail-container">
+    <Link to={`/app/workbooks/${tab}/${workbookId}/views/${defaultViewUrl}`}  className="workbook-thumbnail-container">
       <img className="workbook-thumbnail" src={'/'+thumbnailUrl} />
     </Link>
   </div>

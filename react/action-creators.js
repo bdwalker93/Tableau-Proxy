@@ -260,7 +260,7 @@ export function loadViz(workbookId, workbookName, viewName) {
           type: 'SET_VIZ',
           site: siteName,
           viewsResult: res.data.result,
-          viewPath: workbookName+'/'+viewName
+          viewPath: workbookName+'/'+viewName,
         })
 
         request({

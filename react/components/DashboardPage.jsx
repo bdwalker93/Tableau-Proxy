@@ -12,6 +12,7 @@ import './DashboardPage.less';
 
 const Dashboard = (props) => {
   const {
+    params: { tab },
     workbooksById,
     workbookIds,
     hasMore,
@@ -38,7 +39,7 @@ const Dashboard = (props) => {
         useWindow={true}
         threshold={500}
       >
-        { workbookIds.map(id => <WorkbookListItem key={id}
+        { workbookIds.map(id => <WorkbookListItem key={id} tab={tab}
           workbook={workbooksById[id]} isFav={workbooksById[id].isFavorite}
           onFavorite={() => {
             if ( workbooksById[id].isFavorite ) {

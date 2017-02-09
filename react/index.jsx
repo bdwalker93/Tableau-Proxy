@@ -29,24 +29,23 @@ ReactDOM.render(
       <Route component={App}>
         <Redirect from="/app/" to="/app/workbooks/favorites" />
 
-        <Route path="/app/workbooks/all"
+        <Route path="/app/workbooks/:tab"
           component={DashboardPage}
-          onEnter={()=> store.dispatch(actionCreators.loadAllWorkbooks()) }
+          onEnter={({params: { tab }})=> {
+            if (tab === "all") {
+              store.dispatch(actionCreators.loadAllWorkbooks())
+            } else if (tab==="recent") {
+              store.dispatch(actionCreators.loadRecentWorkbooks())
+            } else if (tab === "favorites") {
+              store.dispatch(actionCreators.loadFavoriteWorkbooks())
+            }
+          }}
         />
 
-        <Route path="/app/workbooks/favorites"
-          component={DashboardPage}
-          onEnter={()=> store.dispatch(actionCreators.loadFavoriteWorkbooks()) }
-        />
-
-        <Route path="/app/workbooks/recent"
-          component={DashboardPage}
-          onEnter={()=> store.dispatch(actionCreators.loadRecentWorkbooks()) }
-        />
-
-        <Route path="/app/workbooks/:workbookId/views/:workbookName/:viewName"
+        <Route path="/app/workbooks/:tab/:workbookId/views/:workbookName/:viewName"
           component={VizPage}
-          onEnter={({params})=> store.dispatch(actionCreators.loadViz(params.workbookId, params.workbookName, params.viewName))} />
+          onEnter={({params})=> store.dispatch(actionCreators.loadViz(params.workbookId, params.workbookName, params.viewName))}
+        />
 
       </Route>
     </Router>
