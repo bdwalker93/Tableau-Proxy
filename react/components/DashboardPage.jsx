@@ -17,17 +17,27 @@ const Dashboard = (props) => {
     workbookIds,
     hasMore,
     loadMore,
+    sites,
+    currentSite,
 
     addFavoriteWorkbook,
     deleteFavoriteWorkbook,
     viewFavoriteWorkbooks,
     viewRecentWorkbooks,
+    switchSite,
     logout
   } = props;
 
   return <div className="dashboard-page">
 
-    <DashboardHeader logout={logout} total={workbookIds.length}/>
+    <DashboardHeader
+      logout={logout}
+      total={workbookIds.length}
+      sites={sites}
+      currentSite={currentSite}
+      switchSite={switchSite}
+      tab={tab}
+    />
 
     <div className="dashboard-content">
       <InfiniteScroll

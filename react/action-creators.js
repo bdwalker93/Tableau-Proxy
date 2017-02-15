@@ -230,6 +230,7 @@ export function loadViz(workbookId, workbookName, viewName) {
       data: {"method":"getSessionInfo","params":{}}
     }).then((res) => {
       let siteName = res.data.result.site.urlName;
+
       request({
         method: 'POST',
         url: '/vizportal/api/web/v1/getViews',
@@ -273,5 +274,65 @@ export function loadViz(workbookId, workbookName, viewName) {
         });
       });
     });
+  }
+}
+
+export function getSitesAndSetCurrent() {
+  return function(dispatch) {
+    request({
+      method: 'POST',
+      url: '/vizportal/api/web/v1/getSessionInfo',
+      data: {"method":"getSessionInfo","params":{}}
+    }).then((res) => {
+      let site = res.data.result.site;
+
+      request({
+        method: 'POST',
+        url: '/vizportal/api/web/v1/getSiteNamesAcrossAllPods',
+        data: {
+          "method":"getSiteNamesAcrossAllPods",
+          "params":{"page":{"startIndex":0,"maxItems":1000}}
+        }
+      }).then((res) => {
+        dispatch({
+          type: 'SET_SITES',
+          sites: res.data.result.siteNames,
+        })
+
+        dispatch({
+          type: 'SET_CURRENT_SITE',
+          currentSite: site,
+        })
+      });
+    });
+  }
+}
+
+export function switchSite(urlName, tab) {
+  return function(dispatch, getState) {
+    request({
+      method: 'POST',
+      url: '/vizportal/api/web/v1/switchSite',
+      data: {method: "switchSite", params:{urlName}}
+    }).then((res) => {
+      dispatch({
+        type: 'SET_CURRENT_SITE',
+        currentSite: {
+          name: res.data.result.site.name,
+          urlName: res.data.result.site.urlName
+        }
+      })
+      dispatch(loadTab(tab))
+    });
+  }
+}
+
+export function loadTab(tab) {
+  if (tab === "all") {
+    return loadAllWorkbooks()
+  } else if (tab === "recent") {
+    return loadRecentWorkbooks()
+  } else if (tab === "favorites") {
+    return loadFavoriteWorkbooks()
   }
 }

@@ -32,13 +32,8 @@ ReactDOM.render(
         <Route path="/app/workbooks/:tab"
           component={DashboardPage}
           onEnter={({params: { tab }})=> {
-            if (tab === "all") {
-              store.dispatch(actionCreators.loadAllWorkbooks())
-            } else if (tab==="recent") {
-              store.dispatch(actionCreators.loadRecentWorkbooks())
-            } else if (tab === "favorites") {
-              store.dispatch(actionCreators.loadFavoriteWorkbooks())
-            }
+            store.dispatch(actionCreators.loadTab(tab))
+            store.dispatch(actionCreators.getSitesAndSetCurrent())
           }}
         />
 

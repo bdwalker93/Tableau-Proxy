@@ -1,6 +1,8 @@
 const uniq = require('lodash.uniq');
 
 const init = {
+  currentSite:{ urlName: '', name: '' },
+  sites: [],
   workbookIds: [],
   workbooksById: {},
   hasMore: true,
@@ -66,6 +68,12 @@ function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
 
 export default function(state = init, action) {
   switch (action.type) {
+    case 'SET_CURRENT_SITE': {
+      return { ...state, currentSite: action.currentSite }
+    }
+    case 'SET_SITES': {
+      return { ...state, sites: action.sites }
+    }
     case 'BUSY_LOADING_MORE': {
       return { ...state, loadingMore: true }
     }
@@ -77,6 +85,7 @@ export default function(state = init, action) {
       } = combineResult(action.workbooksResult, action.viewsResult);
 
       return {
+        ...state,
         workbookIds,
         workbooksById,
         hasMore,
@@ -92,6 +101,7 @@ export default function(state = init, action) {
       } = combineResult(action.workbooksResult, action.viewsResult);
 
       let newState = {
+        ...state,
         workbookIds: uniq([...state.workbookIds, ...workbookIds]),
         workbooksById: {...state.workbooksById, ...workbooksById},
         loadMore: state.loadMore,
