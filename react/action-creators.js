@@ -105,10 +105,6 @@ export function loadMoreWorkbooks(options={}, shouldGetViews=false) {
   }
 }
 
-export function loadAllWorkbooks() {
-  return loadWorkbooks();
-}
-
 function loadWorkbooks (options={}, shouldGetViews=false) {
   return function(dispatch, getState) {
     Promise.all([
@@ -124,32 +120,6 @@ function loadWorkbooks (options={}, shouldGetViews=false) {
       setTimeout(()=>dispatch(updateWorkbooks()), 100);
     });
   }
-}
-
-export function loadFavoriteWorkbooks() {
-  return loadWorkbooks({
-    "filter": {
-      "operator": "and",
-      "clauses": [{
-        "operator": "eq",
-        "field": "isFavorite",
-        "value": true
-      }]
-    }
-  }, true);
-}
-
-export function loadRecentWorkbooks() {
-  return loadWorkbooks({
-    "filter": {
-      "operator": "and",
-      "clauses": [{
-        "operator": "eq",
-        "field": "isRecent",
-        "value": true
-      }]
-    }
-  }, true);
 }
 
 export function addFavoriteWorkbook(key) {
@@ -327,12 +297,49 @@ export function switchSite(urlName, tab) {
   }
 }
 
-export function loadTab(tab) {
+function tabOptions(tab) {
   if (tab === "all") {
-    return loadAllWorkbooks()
+    return { clauses: [], views: true };
   } else if (tab === "recent") {
-    return loadRecentWorkbooks()
+    return {
+      clauses: [{
+        "operator": "eq",
+        "field": "isRecent",
+        "value": true
+      }],
+      views: true
+    }
   } else if (tab === "favorites") {
-    return loadFavoriteWorkbooks()
+    return {
+      clauses: [{
+        "operator": "eq",
+        "field": "isFavorite",
+        "value": true
+      }],
+      views: true
+    }
+  }
+}
+
+export function loadTab(tab) {
+  const { clauses, views } = tabOptions(tab);
+  return loadWorkbooks({ filter: { operator: "and", clauses } }, views);
+}
+
+export function search(query, tab) {
+  console.log('do query', query, tab);
+  if (query || query.length > 0) {
+    const { clauses, views } = tabOptions(tab);
+    return loadWorkbooks({
+      "filter": {
+        "operator": "and",
+        "clauses": [...clauses, {
+          operator: "matches",
+          value: query
+        }]
+      }
+    }, views);
+  } else {
+    return loadTab(tab);
   }
 }

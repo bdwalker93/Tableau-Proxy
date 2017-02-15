@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// https://github.com/mzabriskie/axios#cancellation
 export default function request(config) {
   return axios(config).catch((err) => {
     if (err.response.status === 401) {

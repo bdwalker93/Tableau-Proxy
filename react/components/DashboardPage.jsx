@@ -25,6 +25,7 @@ const Dashboard = (props) => {
     viewFavoriteWorkbooks,
     viewRecentWorkbooks,
     switchSite,
+    search,
     logout
   } = props;
 
@@ -37,6 +38,7 @@ const Dashboard = (props) => {
       currentSite={currentSite}
       switchSite={switchSite}
       tab={tab}
+      search={search}
     />
 
     <div className="dashboard-content">

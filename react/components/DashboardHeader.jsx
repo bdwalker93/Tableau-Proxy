@@ -1,8 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router'
-import { Button, Popover, OverlayTrigger } from 'react-bootstrap';
+import { FormGroup, FormControl, Button, Popover, OverlayTrigger } from 'react-bootstrap';
 
 import './DashboardHeader.less';
+
+const SearchForm = React.createClass({
+  getInitialState() {
+    return { value: '' }
+  },
+  handleChange(e) {
+    this.setState({ value: e.target.value });
+    this.props.search(e.target.value, this.props.tab);
+  },
+  render() {
+    return (
+      <form>
+        <FormGroup
+          controlId="formBasicText"
+        >
+          <FormControl
+            type="text"
+            value={this.state.value}
+            placeholder="Enter text"
+            onChange={this.handleChange}
+          />
+        </FormGroup>
+      </form>
+    );
+  }
+});
 
 export const DashboardHeader = ({
   tab,
@@ -10,6 +36,7 @@ export const DashboardHeader = ({
   currentSite,
   sites,
   switchSite,
+  search,
   total
 }) => {
   return <div className="dashboard-header">
@@ -28,6 +55,8 @@ export const DashboardHeader = ({
       </OverlayTrigger>
       <Button onClick={logout}>Logout</Button>
     </div>
-    <div> second layer</div>
+    <div>
+      <SearchForm search={search} tab={tab} />
+    </div>
   </div>
 }
