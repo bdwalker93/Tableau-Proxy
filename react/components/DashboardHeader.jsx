@@ -37,7 +37,12 @@ export const DashboardHeader = ({
   sites,
   switchSite,
   search,
-  total
+  total,
+  currentSortOption,
+  sortOptions,
+  currentOrderOption,
+  orderOptions,
+  sort
 }) => {
   return <div className="dashboard-header">
     <div>
@@ -57,6 +62,26 @@ export const DashboardHeader = ({
     </div>
     <div>
       <SearchForm search={search} tab={tab} />
+      <OverlayTrigger trigger="click" rootClose
+        placement="bottom" overlay={<Popover id="sort-option">
+          {sortOptions.map(opt=><div key={opt.id}>
+            <a href="#" onClick={()=>sort(opt.id, currentOrderOption, tab)}>{opt.label}</a>
+          { currentSortOption === opt.id ? 
+              <i className="fa fa-check" aria-hidden="true"></i>
+              : null 
+          }
+        </div>)}
+        <hr/>
+        {orderOptions.map(opt=><div key={opt.id}>
+          <a href="#" onClick={()=>sort(currentSortOption, opt.id, tab)}>{opt.label}</a>
+          { currentOrderOption === opt.id ? 
+              <i className="fa fa-check" aria-hidden="true"></i>
+              : null 
+          }
+        </div>)}
+        </Popover>}>
+        <Button>sort</Button>
+      </OverlayTrigger>
     </div>
   </div>
 }

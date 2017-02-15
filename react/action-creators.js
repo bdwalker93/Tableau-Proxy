@@ -1,10 +1,10 @@
 import request from './lib/request';
 
+let ORDER_LIST = [
+  { field:"name", ascending:true }
+]
+
 function getWorkbookRequest(method, options={}) {
-  const defaultOrder = [
-    { field:"hitsTotal", ascending:false },
-    { field:"name", ascending:true }
-  ];
   const defaultPage = { startIndex: 0, maxItems: 6 };
   return request({
     method: 'POST', 
@@ -13,7 +13,7 @@ function getWorkbookRequest(method, options={}) {
       "method":method,
       "params":{
         "filter": options.filter,
-        "order": options.order || defaultOrder,
+        "order": ORDER_LIST,
         "page": options.page || defaultPage,
         "statFields":[]
       }
@@ -327,7 +327,6 @@ export function loadTab(tab) {
 }
 
 export function search(query, tab) {
-  console.log('do query', query, tab);
   if (query || query.length > 0) {
     const { clauses, views } = tabOptions(tab);
     return loadWorkbooks({
@@ -342,4 +341,24 @@ export function search(query, tab) {
   } else {
     return loadTab(tab);
   }
+}
+
+export function sort(sortId, orderId, tab) {
+  ORDER_LIST = ORDER_LIST.filter(i=>i.field != sortId);
+
+  ORDER_LIST = [{
+    field: sortId,
+    ascending: orderId === 'asc'
+  }, ...ORDER_LIST];
+
+  if (ORDER_LIST.length > 3)
+    ORDER_LIST.pop()
+
+  const { clauses, views } = tabOptions(tab);
+  return loadWorkbooks({
+    filter: {
+      "operator": "and",
+      "clauses": clauses,
+    }
+  }, views);
 }

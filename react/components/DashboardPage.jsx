@@ -5,6 +5,7 @@ import * as actionCreators from '../action-creators';
 import { WorkbookListItem } from './WorkbookListItem';
 import { DashboardFooter } from './DashboardFooter';
 import { DashboardHeader } from './DashboardHeader';
+import { SORT_OPTIONS, ORDER_OPTIONS } from '../sorting';
 
 import InfiniteScroll from 'react-infinite-scroller';
 
@@ -26,6 +27,7 @@ const Dashboard = (props) => {
     viewRecentWorkbooks,
     switchSite,
     search,
+    sort,
     logout
   } = props;
 
@@ -39,6 +41,11 @@ const Dashboard = (props) => {
       switchSite={switchSite}
       tab={tab}
       search={search}
+      sort={sort}
+      currentSortOption={'name'}
+      sortOptions={SORT_OPTIONS}
+      currentOrderOption={'asc'}
+      orderOptions={ORDER_OPTIONS}
     />
 
     <div className="dashboard-content">
