@@ -46,22 +46,7 @@ export const DashboardHeader = ({
 }) => {
   return <div className="dashboard-header">
     <div>
-      <OverlayTrigger trigger="click" rootClose
-        placement="bottom" overlay={<Popover id="site-switcher">
-          {sites.map(site=><div key={site.urlName}>
-            <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}</a>
-          { currentSite.urlName === site.urlName ? 
-              <i className="fa fa-check" aria-hidden="true"></i>
-              : null 
-          }
-        </div>)}
-        </Popover>}>
-        <Button>sites</Button>
-      </OverlayTrigger>
-      <Button onClick={logout}>Logout</Button>
-    </div>
-    <div>
-      <SearchForm search={search} tab={tab} />
+
       <OverlayTrigger trigger="click" rootClose
         placement="bottom" overlay={<Popover id="sort-option">
           {sortOptions.map(opt=><div key={opt.id}>
@@ -82,6 +67,26 @@ export const DashboardHeader = ({
         </Popover>}>
         <Button>sort</Button>
       </OverlayTrigger>
+
+      <OverlayTrigger trigger="click" rootClose
+        placement="bottom" overlay={<Popover id="site-switcher">
+          {sites.map(site=><div key={site.urlName}>
+            <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}</a>
+          { currentSite.urlName === site.urlName ? 
+              <i className="fa fa-check" aria-hidden="true"></i>
+              : null 
+          }
+        </div>)}
+        </Popover>}>
+        <Button>sites</Button>
+      </OverlayTrigger>
+
+
+      <Button onClick={logout}>Logout</Button>
+
+    </div>
+    <div>
+      <SearchForm search={search} tab={tab} />
     </div>
   </div>
 }
