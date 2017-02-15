@@ -13,7 +13,7 @@ import './DashboardPage.less';
 
 const Dashboard = (props) => {
   const {
-    params: { tab },
+    params: { tab, sortId, orderId },
     workbooksById,
     workbookIds,
     hasMore,
@@ -27,7 +27,6 @@ const Dashboard = (props) => {
     viewRecentWorkbooks,
     switchSite,
     search,
-    sort,
     logout
   } = props;
 
@@ -41,10 +40,9 @@ const Dashboard = (props) => {
       switchSite={switchSite}
       tab={tab}
       search={search}
-      sort={sort}
-      currentSortOption={'name'}
+      sortId={sortId}
       sortOptions={SORT_OPTIONS}
-      currentOrderOption={'asc'}
+      orderId={orderId}
       orderOptions={ORDER_OPTIONS}
     />
 

@@ -1,8 +1,5 @@
 import request from './lib/request';
-
-let ORDER_LIST = [
-  { field:"name", ascending:true }
-]
+import { sort } from './sorting';
 
 function getWorkbookRequest(method, options={}) {
   const defaultPage = { startIndex: 0, maxItems: 6 };
@@ -13,7 +10,7 @@ function getWorkbookRequest(method, options={}) {
       "method":method,
       "params":{
         "filter": options.filter,
-        "order": ORDER_LIST,
+        "order": sort(options.sortId, options.orderId),
         "page": options.page || defaultPage,
         "statFields":[]
       }
@@ -321,9 +318,12 @@ function tabOptions(tab) {
   }
 }
 
-export function loadTab(tab) {
+export function loadTab(tab, sortId, orderId) {
   const { clauses, views } = tabOptions(tab);
-  return loadWorkbooks({ filter: { operator: "and", clauses } }, views);
+  return loadWorkbooks({
+    filter: { operator: "and", clauses },
+    sortId, orderId
+  }, views);
 }
 
 export function search(query, tab) {
@@ -343,22 +343,3 @@ export function search(query, tab) {
   }
 }
 
-export function sort(sortId, orderId, tab) {
-  ORDER_LIST = ORDER_LIST.filter(i=>i.field != sortId);
-
-  ORDER_LIST = [{
-    field: sortId,
-    ascending: orderId === 'asc'
-  }, ...ORDER_LIST];
-
-  if (ORDER_LIST.length > 3)
-    ORDER_LIST.pop()
-
-  const { clauses, views } = tabOptions(tab);
-  return loadWorkbooks({
-    filter: {
-      "operator": "and",
-      "clauses": clauses,
-    }
-  }, views);
-}

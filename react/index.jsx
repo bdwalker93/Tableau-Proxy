@@ -27,12 +27,16 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route component={App}>
-        <Redirect from="/app/" to="/app/workbooks/favorites" />
+        <Redirect from="/app/" to="/app/workbooks" />
 
-        <Route path="/app/workbooks/:tab"
+        <Redirect from="/app/workbooks" to="/app/workbooks/favorites" />
+
+        <Redirect from="/app/workbooks/:tab" to="/app/workbooks/:tab/name/asc" />
+
+        <Route path="/app/workbooks/:tab/:sortId/:orderId"
           component={DashboardPage}
-          onEnter={({params: { tab }})=> {
-            store.dispatch(actionCreators.loadTab(tab))
+          onEnter={({params: { tab, sortId, orderId }})=> {
+            store.dispatch(actionCreators.loadTab(tab, sortId, orderId))
             store.dispatch(actionCreators.getSitesAndSetCurrent())
           }}
         />
