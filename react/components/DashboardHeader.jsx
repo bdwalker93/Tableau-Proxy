@@ -9,8 +9,9 @@ const SearchForm = React.createClass({
     return { value: '' }
   },
   handleChange(e) {
+    const { tab, sortId, orderId } = this.props;
     this.setState({ value: e.target.value });
-    this.props.search(e.target.value, this.props.tab);
+    this.props.search(e.target.value, tab, sortId, orderId);
   },
   render() {
     return (

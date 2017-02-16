@@ -1,5 +1,7 @@
 const uniq = require('lodash.uniq');
 
+import { sortList } from '../sorting';
+
 const init = {
   currentSite:{ urlName: '', name: '' },
   sites: [],
@@ -35,7 +37,7 @@ const reduceWorkbooks = (workbooks=[], favorites=[]) => {
 const emptyViewsResult = { views:[], favorites:[] };
 const emptyWorkbooksResult = { workbooks:[], favorites:[] };
 
-function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
+function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult, sortId, orderId) {
   let wbObj = reduceWorkbooks(wbRes.workbooks, wbRes.favorites);
   let vObj = reduceWorkbooks(vRes.views, vRes.favorites);
   let list = [];
@@ -60,7 +62,7 @@ function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
   })
 
   return {
-    workbookIds: list,
+    workbookIds: sortList(list, map, sortId, orderId),
     workbooksById: map,
     hasMore: wbRes.moreItems || vRes.moreItems
   }
@@ -82,7 +84,7 @@ export default function(state = init, action) {
         workbookIds,
         workbooksById,
         hasMore
-      } = combineResult(action.workbooksResult, action.viewsResult);
+      } = combineResult(action.workbooksResult, action.viewsResult, action.sortId, action.orderId);
 
       return {
         ...state,

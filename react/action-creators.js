@@ -1,5 +1,8 @@
 import request from './lib/request';
-import { sort } from './sorting';
+import { addSort } from './sorting';
+
+let isSearching = false;
+let searchQuery = '';
 
 function getWorkbookRequest(method, options={}) {
   const defaultPage = { startIndex: 0, maxItems: 6 };
@@ -10,7 +13,7 @@ function getWorkbookRequest(method, options={}) {
       "method":method,
       "params":{
         "filter": options.filter,
-        "order": sort(options.sortId, options.orderId),
+        "order": addSort(options.sortId, options.orderId),
         "page": options.page || defaultPage,
         "statFields":[]
       }
@@ -112,7 +115,9 @@ function loadWorkbooks (options={}, shouldGetViews=false) {
         type: 'LOAD_INITIAL_WORKBOOKS',
         workbooksResult: wbRes.data.result,
         viewsResult: shouldGetViews ? vRes.data.result : undefined,
-        loadMore: () => dispatch(loadMoreWorkbooks(options, shouldGetViews))
+        loadMore: () => dispatch(loadMoreWorkbooks(options, shouldGetViews)),
+        sortId: options.sortId,
+        orderId: options.orderId
       });
       setTimeout(()=>dispatch(updateWorkbooks()), 100);
     });
@@ -320,26 +325,36 @@ function tabOptions(tab) {
 
 export function loadTab(tab, sortId, orderId) {
   const { clauses, views } = tabOptions(tab);
-  return loadWorkbooks({
-    filter: { operator: "and", clauses },
-    sortId, orderId
-  }, views);
+  if (isSearching) {
+    return search(searchQuery, tab, sortId, orderId);
+  } else {
+    return loadWorkbooks({
+      filter: { operator: "and", clauses },
+      sortId,
+      orderId
+    }, views);
+  }
 }
 
-export function search(query, tab) {
+export function search(query, tab, sortId, orderId) {
+  searchQuery = query;
   if (query || query.length > 0) {
+    isSearching = true;
     const { clauses, views } = tabOptions(tab);
     return loadWorkbooks({
-      "filter": {
-        "operator": "and",
-        "clauses": [...clauses, {
+      filter: {
+        operator: "and",
+        clauses: [...clauses, {
           operator: "matches",
           value: query
         }]
-      }
+      },
+      sortId,
+      orderId
     }, views);
   } else {
-    return loadTab(tab);
+    isSearching = false;
+    return loadTab(tab, sortId, orderId);
   }
 }
 
