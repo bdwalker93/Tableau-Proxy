@@ -5,7 +5,7 @@ let isSearching = false;
 let searchQuery = '';
 
 function getWorkbookRequest(method, options={}) {
-  const defaultPage = { startIndex: 0, maxItems: 6 };
+  const defaultPage = { startIndex: 0, maxItems: 100 };
   return request({
     method: 'POST', 
     url: '/vizportal/api/web/v1/'+method,
@@ -68,7 +68,7 @@ export function loadMoreWorkbooks(options={}, shouldGetViews=false) {
 
     let map = getState().workbooks.workbooksById;
     let wbCount = countMapItemsOnCondition(map, i => i.isWorkbook);
-    let maxItems = 6;
+    let maxItems = 100;
 
     let promises = [];
     promises.push(
@@ -98,7 +98,9 @@ export function loadMoreWorkbooks(options={}, shouldGetViews=false) {
       dispatch({
         type: 'LOAD_MORE_WORKBOOKS',
         workbooksResult: wbRes.data.result,
-        viewsResult: shouldGetViews ? vRes.data.result : undefined
+        viewsResult: shouldGetViews ? vRes.data.result : undefined,
+        sortId: options.sortId,
+        orderId: options.orderId
       });
       setTimeout(()=>dispatch(updateWorkbooks()), 100);
     });
@@ -223,7 +225,7 @@ export function loadViz(workbookId, workbookName, viewName) {
             }],
             "page": {
               "startIndex": 0,
-              "maxItems": 24
+              "maxItems": 100
             },
             "statFields": ["hitsTotal", "hitsLastOneMonthTotal", "hitsLastThreeMonthsTotal", "hitsLastTwelveMonthsTotal", "favoritesTotal"]
           }

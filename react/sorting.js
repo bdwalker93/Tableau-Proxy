@@ -1,14 +1,17 @@
 export const SORT_OPTIONS = [{
   id: 'name',
   label: "Name",
-  sortLambda: (map, orderId) => (a,b) => {
-    console.log('A AND B', a, b);
-    console.log(' THE MAP', map);
+  sortLambda: (map, orderId) => (aa,bb) => {
+    let a = map[aa].name;
+    let b = map[bb].name;
     if (orderId === "asc") {
-      return map[a].name > map[b].name
+      if(a < b) return -1;
+      if(a > b) return 1;
     } else {
-      return map[a].name < map[b].name
+      if(a > b) return -1;
+      if(a < b) return 1;
     }
+    return 0;
   }
 },{
   id: 'ownerName',
@@ -16,12 +19,17 @@ export const SORT_OPTIONS = [{
 },{
   id: 'updatedAt',
   label: "Modified",
-  sortLambda: orderId => (a,b) => {
+  sortLambda: (map, orderId) => (a,b) => {
+    let timeA = new Date(map[a].updatedAt);
+    let timeB = new Date(map[b].updatedAt);
+    let res = null;
     if (orderId === "asc") {
-      return new Date(a.updatedAt).getTime() > new Date(b.updatedAt).getTime()
+      res = timeB - timeA;
     } else {
-      return new Date(a.updatedAt).getTime() < new Date(b.updatedAt).getTime()
+      res = timeA - timeB;
     }
+    console.log(timeA, timeB, res);
+    return res;
   }
 },{
   id: 'projectName',

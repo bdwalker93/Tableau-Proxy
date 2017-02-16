@@ -37,7 +37,7 @@ const reduceWorkbooks = (workbooks=[], favorites=[]) => {
 const emptyViewsResult = { views:[], favorites:[] };
 const emptyWorkbooksResult = { workbooks:[], favorites:[] };
 
-function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult, sortId, orderId) {
+function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
   let wbObj = reduceWorkbooks(wbRes.workbooks, wbRes.favorites);
   let vObj = reduceWorkbooks(vRes.views, vRes.favorites);
   let list = [];
@@ -62,7 +62,7 @@ function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult, sortI
   })
 
   return {
-    workbookIds: sortList(list, map, sortId, orderId),
+    workbookIds: list,
     workbooksById: map,
     hasMore: wbRes.moreItems || vRes.moreItems
   }
@@ -84,11 +84,11 @@ export default function(state = init, action) {
         workbookIds,
         workbooksById,
         hasMore
-      } = combineResult(action.workbooksResult, action.viewsResult, action.sortId, action.orderId);
+      } = combineResult(action.workbooksResult, action.viewsResult);
 
       return {
         ...state,
-        workbookIds,
+        workbookIds: sortList(workbookIds, workbooksById, action.sortId, action.orderId),
         workbooksById,
         hasMore,
         loadMore: action.loadMore,
@@ -102,10 +102,13 @@ export default function(state = init, action) {
         hasMore
       } = combineResult(action.workbooksResult, action.viewsResult);
 
+      let __workbookIds = uniq([...state.workbookIds, ...workbookIds]);
+      let __workbooksById = {...state.workbooksById, ...workbooksById};
+
       let newState = {
         ...state,
-        workbookIds: uniq([...state.workbookIds, ...workbookIds]),
-        workbooksById: {...state.workbooksById, ...workbooksById},
+        workbookIds: sortList(__workbookIds, __workbooksById, action.sortId, action.orderId),
+        workbooksById: __workbooksById,
         loadMore: state.loadMore,
         hasMore,
         loadingMore: false
