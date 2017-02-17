@@ -1,15 +1,19 @@
 export const SORT_OPTIONS = [{
   id: 'name',
   label: "Name",
-  sortLambda: (map, orderId) => (aa,bb) => {
-    let a = map[aa].name;
-    let b = map[bb].name;
+  sortLambda: (map, orderId) => (a,b) => {
+    let firstName = map[a].name.toLowerCase();
+    let secondName = map[b].name.toLowerCase();
     if (orderId === "asc") {
-      if(a < b) return -1;
-      if(a > b) return 1;
+      if(firstName < secondName) return -1;
+      if(firstName  > secondName) return 1;
+      
+      return 0;
     } else {
-      if(a > b) return -1;
-      if(a < b) return 1;
+      if(firstName < secondName) return 1;
+      if(firstName  > secondName) return -1;
+      
+      return 0;
     }
     return 0;
   }
@@ -65,5 +69,5 @@ export function addSort(sortId="name", orderId="asc") {
 export function sortList(list, map, sortId="name", orderId="asc") {
   const sortOption = SORT_OPTIONS.find(i=>i.id===sortId);
   const sortLambda = sortOption.sortLambda(map, orderId);
-  return list.sort(sortLambda);
+  return  list.sort(sortLambda);
 }
