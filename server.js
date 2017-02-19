@@ -11,7 +11,7 @@ const gzip = zlib.Gzip();
 const concatStream = require('concat-stream');
 
 var proxy = httpProxy.createServer({
-  target: 'https://tableau.ics.uci.edu',
+  target: 'http://tableau.ics.uci.edu',
   secure: false
 })
 
