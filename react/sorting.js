@@ -8,6 +8,9 @@ export const SORT_OPTIONS = [{
 },{
   id: 'ownerName',
   label: "Owner",
+  sortLambda: (map, orderId) => (a,b) => {
+    return stringComparator(orderId, map[a].name.toLowerCase(), map[b].name.toLowerCase())
+  }
 },{
   id: 'updatedAt',
   label: "Modified",
@@ -26,6 +29,9 @@ export const SORT_OPTIONS = [{
 },{
   id: 'projectName',
   label: "Project",
+  sortLambda: (map, orderId) => (a,b) => {
+    return stringComparator(orderId, map[a].name.toLowerCase(), map[b].name.toLowerCase())
+  }
 }]
 
 export const ORDER_OPTIONS = [{
