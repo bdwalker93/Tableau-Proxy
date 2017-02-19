@@ -1,21 +1,9 @@
+
 export const SORT_OPTIONS = [{
   id: 'name',
   label: "Name",
   sortLambda: (map, orderId) => (a,b) => {
-    let firstName = map[a].name.toLowerCase();
-    let secondName = map[b].name.toLowerCase();
-    if (orderId === "asc") {
-      if(firstName < secondName) return -1;
-      if(firstName  > secondName) return 1;
-      
-      return 0;
-    } else {
-      if(firstName < secondName) return 1;
-      if(firstName  > secondName) return -1;
-      
-      return 0;
-    }
-    return 0;
+    return stringComparator(orderId, map[a].name.toLowerCase(), map[b].name.toLowerCase())
   }
 },{
   id: 'ownerName',
@@ -70,4 +58,19 @@ export function sortList(list, map, sortId="name", orderId="asc") {
   const sortOption = SORT_OPTIONS.find(i=>i.id===sortId);
   const sortLambda = sortOption.sortLambda(map, orderId);
   return  list.sort(sortLambda);
+}
+
+
+function stringComparator(orderId, str1, str2){
+    if (orderId === "asc") {
+      if(str1 < str2) return -1;
+      if(str1  > str2) return 1;
+      
+      return 0;
+    } else {
+      if(str1 < str2) return 1;
+      if(str1  > str2) return -1;
+      
+      return 0;
+    }
 }
