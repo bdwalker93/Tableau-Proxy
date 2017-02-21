@@ -9,11 +9,7 @@ const transformerProxy = require('transformer-proxy');
 const zlib = require('zlib');
 const gzip = zlib.Gzip();
 const concatStream = require('concat-stream');
-
-var proxy = httpProxy.createServer({
-  target: 'https://tableau.ics.uci.edu',
-  secure: false
-})
+const cookieParser = require('cookie-parser');
 
 var Promise = require('bluebird');
 var app = express();
@@ -44,29 +40,51 @@ rootModifications.push({
 			ws.end(style);
 		});
   }
+},{
+  query: 'body',
+  func: node => {
+		var rs = node.createReadStream();
+		var ws = node.createWriteStream({outer: false});
+    ws.write(`<a href="/">Back</a>`);
+		rs.pipe(ws, {end: true});
+  }
 });
+
+const dynamicProxyMiddleware = (req, res) => {
+  let proxy = httpProxy.createServer({
+    target: req.cookies.PROXY_TARGET,
+    secure: false
+  });
+  proxy.web(req, res);
+};
 
 app.use('/node_modules', express.static('node_modules/'));
 app.use(express.static('public'));
+app.use(cookieParser())
+
+app.get('/signin', (req, res, next) => {
+  req.url = '/';
+  harmon([], rootModifications)(req, res, next);
+}, dynamicProxyMiddleware);
+
+app.get('/app/*', (req, res, next) => {
+  fs.createReadStream(__dirname+'/public/app/index.html').pipe(res);
+});
 
 app.use((req, res, next) => {
+  console.log('generic middleware', req.url);
   if ( req.url === '/' ) {
-    harmon([], rootModifications)(req, res, next);
+    fs.createReadStream(__dirname+'/public/app/index.html').pipe(res);
   } else if (req.url.match(/^\/en\/loginSitePicker.html/)) {
     fs.createReadStream(__dirname+'/loginSitePicker.html').pipe(res);
   } else if (req.url.match(/^\/en\/main.html/)) {
     fs.createReadStream(__dirname+'/react/index.html').pipe(res);
   } else if (req.url.match(/^\/bundle.js/)) {
     fs.createReadStream(__dirname+'/react/bundle.js').pipe(res);
-  } else if (req.url.match(/^\/app\/.+/)) {
-    // catchall route to load react app
-    fs.createReadStream(__dirname+'/public/app/index.html').pipe(res);
   } else {
     next();
   }
-}, (req, res, next) => {
-  proxy.web(req, res);
-});
+}, dynamicProxyMiddleware);
 
 https.createServer({
   key: fs.readFileSync('localhost.key', 'utf8'),

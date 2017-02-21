@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { reducer as formReducer } from 'redux-form'
 import App from './components/App';
+//import { ServerSelectionPage } from './components/ServerSelectionPage';
 import { DashboardPage } from './components/DashboardPage';
 import { VizPage } from './components/VizPage';
 import workbooksReducer from './reducers/workbooks';
@@ -27,6 +28,8 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route component={App}>
+        {/* <Route path="/" component={ServerSelectionPage} /> */}
+
         <Redirect from="/app/" to="/app/workbooks" />
 
         <Redirect from="/app/workbooks" to="/app/workbooks/favorites" />

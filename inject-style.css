@@ -21,3 +21,8 @@
   line-height: 56px;
   font-size: 22px;
 }
+
+/* signin page */
+.tb-app,.tb-app-inner {
+  position: initial;
+}
