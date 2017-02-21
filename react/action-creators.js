@@ -258,6 +258,7 @@ export function getSitesAndSetCurrent() {
       url: '/vizportal/api/web/v1/getSessionInfo',
       data: {"method":"getSessionInfo","params":{}}
     }).then((res) => {
+      console.log(res.status, res.data);
       let site = res.data.result.site;
 
       request({

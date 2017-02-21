@@ -19,6 +19,23 @@ const dynamicProxyMiddleware = (req, res) => {
   proxy.web(req, res);
 };
 
+const noTarget500 = (req, res, next) => {
+  if (req.cookies.PROXY_TARGET) {
+    next();
+  } else {
+    res.status(500);
+    res.end(fs.readFileSync(__dirname+'/redirect-root.html'));
+  }
+}
+
+const noTarget301 = (req, res, next) => {
+  if (req.cookies.PROXY_TARGET) {
+    next();
+  } else {
+    res.redirect('/');
+  }
+}
+
 const signinRewriteMiddleware = (req, res, next) => {
   req.url = '/';
 
@@ -66,18 +83,19 @@ const fileMiddleware = filePath => (req, res) => {
   fs.createReadStream(path.join(__dirname, filePath)).pipe(res);
 }
 
-const reactAppMiddleware = fileMiddleware('public/app/index.html');
+const reactAppMiddleware = fileMiddleware('public/index.html');
 
 app.use('/node_modules', express.static('node_modules/'));
 app.use(express.static('public'));
 app.use(cookieParser())
-app.get('/signin', signinRewriteMiddleware, dynamicProxyMiddleware);
+app.get('/signin', noTarget301, signinRewriteMiddleware, dynamicProxyMiddleware);
 app.get('/', reactAppMiddleware);
-app.get('/app/*', reactAppMiddleware);
+app.get('/app', noTarget301, reactAppMiddleware);
+app.get('/app/*', noTarget301, reactAppMiddleware);
 app.get('/en/loginSitePicker.html', fileMiddleware('loginSitePicker.html'));
 app.get('/en/main.html', fileMiddleware('react/index.html'));
 app.get('/bundle.js', fileMiddleware('react/bundle.js'));
-app.use(dynamicProxyMiddleware);
+app.use(noTarget301, dynamicProxyMiddleware);
 
 https.createServer({
   key: fs.readFileSync('localhost.key', 'utf8'),
