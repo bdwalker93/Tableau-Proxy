@@ -361,3 +361,17 @@ export function search(query, tab, sortId, orderId) {
   }
 }
 
+export function connectToTablea(key) {
+  return function(dispatch, getState) {
+    const { id } = getState().workbooks.workbooksById[key];
+    dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: key, isFavorite: true });
+    request({
+      method: 'POST', 
+      url: "/vizportal/api/web/v1/addFavorite",
+      data:{
+        "method":"addFavorite",
+        "params":{ "objectId": id, "objectType": 'workbook' }
+      }
+    }).catch(()=> dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: key, isFavorite: false }));
+  }
+}

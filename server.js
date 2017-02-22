@@ -95,7 +95,7 @@ app.get('/app/*', noTarget301, reactAppMiddleware);
 app.get('/en/loginSitePicker.html', fileMiddleware('loginSitePicker.html'));
 app.get('/en/main.html', fileMiddleware('react/index.html'));
 app.get('/bundle.js', fileMiddleware('react/bundle.js'));
-app.use(noTarget301, dynamicProxyMiddleware);
+app.use(noTarget500, dynamicProxyMiddleware);
 
 https.createServer({
   key: fs.readFileSync('localhost.key', 'utf8'),
