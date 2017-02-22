@@ -361,17 +361,21 @@ export function search(query, tab, sortId, orderId) {
   }
 }
 
-export function connectToTablea(key) {
+export function connectToTableau(key) {
   return function(dispatch, getState) {
-    const { id } = getState().workbooks.workbooksById[key];
-    dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: key, isFavorite: true });
     request({
       method: 'POST', 
-      url: "/vizportal/api/web/v1/addFavorite",
+      url: "/vizportal/api/web/v1/getServerSettingsUnauthenticated",
       data:{
-        "method":"addFavorite",
-        "params":{ "objectId": id, "objectType": 'workbook' }
+        "method":"getServerSettingsUnauthenticated",
+        "params":{ }
       }
-    }).catch(()=> dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: key, isFavorite: false }));
+    }).then(() =>{
+      console.log("going to signin");
+      window.location = "/signin";
+    }).catch(() => {
+      console.log("alerting");
+      alert("Tablea Server Not Found");
+    })
   }
 }

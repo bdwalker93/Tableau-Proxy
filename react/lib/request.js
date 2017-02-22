@@ -6,6 +6,8 @@ export default function request(config) {
 
     if (err.response.status === 500) {
       window.location = '/';
+    } else if(err.response.status === 502) {
+      throw new Error('Bad Gateway');
     } else if (err.response.status === 401) {
       console.log('session expired, redirecting to login');
       window.location = '/';

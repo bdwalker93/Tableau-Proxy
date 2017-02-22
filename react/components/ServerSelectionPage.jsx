@@ -14,7 +14,7 @@ const ServerSelection = React.createClass({
   },
   render() {
     return (
-      <form>
+      <form onSubmit={this.connect}>
         <FormGroup controlId="formBasicText" >
           <FormControl
             type="text"
@@ -22,10 +22,14 @@ const ServerSelection = React.createClass({
             placeholder="Enter text"
             onChange={this.handleChange}
           />
-          <Button onClick={this.props.connectToTableau}>Connect</Button>
+          <Button onClick={this.connect}>Connect</Button>
         </FormGroup>
       </form>
     );
+  },
+  connect(e) {
+    e.preventDefault();
+    this.props.connectToTableau(this.state.value)
   }
 });
 

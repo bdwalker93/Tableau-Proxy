@@ -16,10 +16,21 @@ const dynamicProxyMiddleware = (req, res) => {
     target: req.cookies.PROXY_TARGET,
     secure: false
   });
+
+  //
+  // Listen for the `error` event on `proxy`.
+  proxy.on('error', function (err, req, res) {
+    res.writeHead(502, {
+      'Content-Type': 'text/html'
+    });
+    res.end(fs.readFileSync(__dirname+'/redirect-root.html'));
+  });
+
   proxy.web(req, res);
 };
 
 const noTarget500 = (req, res, next) => {
+  console.log("in noTarget500", req.cookies);
   if (req.cookies.PROXY_TARGET) {
     next();
   } else {
