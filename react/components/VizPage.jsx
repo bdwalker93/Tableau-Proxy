@@ -60,10 +60,12 @@ const Viz = ({
     { site && viewPath ? 
         <BzIframe onLoad={(iframe)=>{
           if (!  iframe.contentWindow )  return ;
-          let $ = iframe.contentWindow.jQuery;
-          let t = $('.tableau')[0];
-          let zoom = t.clientWidth / t.scrollWidth * 100;
-          $(t).css({zoom: zoom+'%'});
+          // setTimeout(()=>{
+            let $ = iframe.contentWindow.jQuery;
+            let t = $('.tableau')[0];
+            let zoom = t.clientWidth / t.scrollWidth * 100;
+            $(t).css({zoom: zoom+'%'});
+            //}, 0);
         }} src={`/t/${site}/views/${viewPath}?:embed=y&:showVizHome=n&:toolbar=top&:openAuthoringInTopWindow=true&:browserBackButtonUndo=true&:reloadOnCustomViewSave=true&:showShareOptions=true&:size=100,183`}/>
         : null }
 </div>

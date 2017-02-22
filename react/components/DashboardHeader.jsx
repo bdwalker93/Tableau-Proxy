@@ -15,10 +15,8 @@ const SearchForm = React.createClass({
   },
   render() {
     return (
-      <form>
-        <FormGroup
-          controlId="formBasicText"
-        >
+      <form onSubmit={e=>e.preventDefault()}>
+        <FormGroup controlId="formBasicText">
           <FormControl
             type="text"
             value={this.state.value}

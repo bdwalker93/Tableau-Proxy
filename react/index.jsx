@@ -30,7 +30,7 @@ ReactDOM.render(
       <Route component={App}>
         <Route path="/" component={ServerSelectionPage} />
 
-        <Redirect from="/app/" to="/app/workbooks" />
+        <Redirect from="/app" to="/app/workbooks" />
 
         <Redirect from="/app/workbooks" to="/app/workbooks/favorites" />
 
