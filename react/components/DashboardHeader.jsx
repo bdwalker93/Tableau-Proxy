@@ -2,8 +2,6 @@ import React from 'react';
 import { Link } from 'react-router'
 import { FormGroup, FormControl, Button, Popover, OverlayTrigger } from 'react-bootstrap';
 
-import './DashboardHeader.less';
-
 const SearchForm = React.createClass({
   getInitialState() {
     return { value: '' }

@@ -15,6 +15,8 @@ import ReduxThunk from 'redux-thunk';
 
 //import 'font-awesome/less/font-awesome.less';
 import 'bootstrap/less/bootstrap.less';
+import 'onsenui/css/onsenui.css';
+import 'onsenui/css/onsen-css-components.css';
 
 const reducer = combineReducers({
   form: formReducer,

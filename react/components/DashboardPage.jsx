@@ -11,6 +11,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 import './DashboardPage.less';
 
+import {Page, Toolbar, Icon, ToolbarButton} from 'react-onsenui';
+
 const Dashboard = (props) => {
   const {
     params: { tab, sortId, orderId },
@@ -30,21 +32,33 @@ const Dashboard = (props) => {
     logout
   } = props;
 
-  return <div className="dashboard-page">
+  return <Page renderToolbar={()=><Toolbar>
+      <div className='left' style={{width:'auto'}}>
+        <img src="/img/logo.png" style={{height: '100%'}}/>
+      </div>
+      <div className='center' style={{textAlign: 'initial'}}>
+        <span style={{color: '#ccc', fontSize: '5px'}}>UserName</span>
+        <span style={{fontSize: '10px'}}>Server</span>
+      </div>
+    </Toolbar>
+  }>
 
-    <DashboardHeader
-      logout={logout}
-      total={workbookIds.length}
-      sites={sites}
-      currentSite={currentSite}
-      switchSite={switchSite}
-      tab={tab}
-      search={search}
-      sortId={sortId}
-      sortOptions={SORT_OPTIONS}
-      orderId={orderId}
-      orderOptions={ORDER_OPTIONS}
-    />
+  {/*
+      <DashboardHeader
+        logout={logout}
+        total={workbookIds.length}
+        sites={sites}
+        currentSite={currentSite}
+        switchSite={switchSite}
+        tab={tab}
+        search={search}
+        sortId={sortId}
+        sortOptions={SORT_OPTIONS}
+        orderId={orderId}
+        orderOptions={ORDER_OPTIONS}
+      />
+      */}
+
 
     <div className="dashboard-content">
       <InfiniteScroll
@@ -71,7 +85,7 @@ const Dashboard = (props) => {
     </div>
     
     <DashboardFooter />
-  </div>
+  </Page>
 }
 
 function mapStateToProps(state) {
