@@ -4,6 +4,7 @@ import { sortList } from '../sorting';
 
 const init = {
   currentSite:{ urlName: '', name: '' },
+  currentUser:{ displayName: '' },
   sites: [],
   workbookIds: [],
   workbooksById: {},
@@ -70,6 +71,9 @@ function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
 
 export default function(state = init, action) {
   switch (action.type) {
+    case 'SET_CURRENT_USER': {
+      return { ...state, currentUser: action.currentUser }
+    }
     case 'SET_CURRENT_SITE': {
       return { ...state, currentSite: action.currentSite }
     }

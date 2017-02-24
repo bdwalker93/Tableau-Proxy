@@ -258,6 +258,12 @@ export function getSitesAndSetCurrent() {
       url: '/vizportal/api/web/v1/getSessionInfo',
       data: {"method":"getSessionInfo","params":{}}
     }).then((res) => {
+
+      dispatch({
+        type: 'SET_CURRENT_USER',
+        currentUser: res.data.result.user
+      })
+
       console.log(res.status, res.data);
       let site = res.data.result.site;
 
@@ -278,6 +284,7 @@ export function getSitesAndSetCurrent() {
           type: 'SET_CURRENT_SITE',
           currentSite: site,
         })
+
       });
     });
   }
