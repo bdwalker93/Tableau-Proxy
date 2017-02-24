@@ -30,7 +30,6 @@ const Dashboard = React.createClass({
     this.setState({ isOpen: false });
   },
   getTarget: function() {
-    console.log(this.refs);
     return this.refs.dashboardPage.refs.tableauIcon;
   },
   render: function() {
@@ -94,18 +93,19 @@ const Dashboard = React.createClass({
           dataSource={[{
             label: "Logout",
             onClick: logout
-          },...sites.map(site=>({
+          },...sites.map(site=>{
+            let isSelected = site.urlName === currentSite.urlName;
+            return {
               label: site.name,
-              onClick: () => {
-                if (site.urlName !== currentSite.urlName) {
-                  switchSite(site.urlName, tab)
-                }
-              }
-          })),{
+              iconNode: isSelected ? <i className="fa fa-check"></i> : null,
+              onClick: () => isSelected ? null : switchSite(site.urlName, tab)
+            }
+          }),{
             label: "Help",
             onClick: ()=> window.location = "https://github.com/bdwalker93/Tableau-Proxy/issues?utf8=%E2%9C%93&q=is%3Aissue"
           }]}
           renderRow={(row, index)=><ListItem key={index} onClick={row.onClick}>
+            { row.iconNode ? row.iconNode : null }
             <div className='center'>{row.label}</div>
           </ListItem>}
         ></List>
