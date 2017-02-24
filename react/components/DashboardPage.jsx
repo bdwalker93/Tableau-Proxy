@@ -6,21 +6,46 @@ import { WorkbookListItem } from './WorkbookListItem';
 import { DashboardFooter } from './DashboardFooter';
 import { DashboardHeader } from './DashboardHeader';
 import { SORT_OPTIONS, ORDER_OPTIONS } from '../sorting';
+import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 
 import InfiniteScroll from 'react-infinite-scroller';
 
 import './DashboardPage.less';
 
-import {Page, Toolbar, Icon, ToolbarButton, Popover, List, ListItem, Button} from 'react-onsenui';
+import {Page, Toolbar, Icon, ToolbarButton, Popover, List, ListItem, Button, Tabbar, Tab} from 'react-onsenui';
 
 import cookies from "browser-cookies";
 
+const Stub = React.createClass({
+  render: () => {
+    return <Page></Page>;
+  }
+});
+
 const getServerHostname = () => new URL(cookies.get('PROXY_TARGET')).hostname;
+
+const tabMap = {
+  favorites: 0,
+  recent: 1,
+  all: 2
+}
+
+
+const tabList = [
+  'favorites',
+  'recent',
+  'all'
+]
 
 const Dashboard = React.createClass({
   getInitialState: function() {
+    const tabIndex = tabMap[this.props.params.tab];
+    console.log('tab',this.props.params.tab);
+    console.log('tabindex', tabIndex);
     return {
-      isOpen: false
+      isOpen: false,
+      tabIndex
     };
   },
   showPopover: function() {
@@ -149,6 +174,29 @@ const Dashboard = React.createClass({
         </InfiniteScroll>
       </div>
       <DashboardFooter />
+
+
+      <Tabbar
+        index={this.state.tabIndex}
+        onPreChange={(event) => {
+          let tabName = tabList[event.index];
+          //browserHistory.push('/app/workbooks/'+tabName);
+        }}
+        renderTabs={()=>[
+        {
+          content: <Stub/>,
+          tab: <Tab label='Favorite' />
+        },
+        {
+          content: <Stub/>,
+          tab: <Tab label='Recent' />
+        },
+        {
+          content: <Stub/>,
+          tab: <Tab label='All' />
+        }
+      ]}/>
+      
     </Page>
   }
 });
