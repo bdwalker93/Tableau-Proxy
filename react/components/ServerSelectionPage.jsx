@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../action-creators';
 import cookies from "browser-cookies";
 
+import { Page } from './Page';
+
 const ServerSelection = React.createClass({
   getInitialState() {
     return { value: cookies.get("PROXY_TARGET") || ""} 
@@ -14,10 +16,9 @@ const ServerSelection = React.createClass({
   },
   render() {
     return (
-      <div style={{backgroundColor: '#f9f9f9'}}>
-        <div style={{width: '100%', height: '50px', backgroundColor: 'white', borderBottom: '1px solid #eee', color: '#2f2f2f'}}>
+      <Page renderToolbar={()=><div>
           <div style={{textAlign: 'center', fontSize: '22px', lineHeight: '48px'}}>Choose a server</div>
-        </div>
+        </div>}>
         <form style={{ margin:'20px'}} onSubmit={this.connect}>
           <div style={{
             height: '30vh',
@@ -38,7 +39,7 @@ const ServerSelection = React.createClass({
           </Button>
         </FormGroup>
       </form>
-    </div>
+    </Page>
     );
   },
   connect(e) {
