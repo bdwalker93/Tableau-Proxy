@@ -13,7 +13,7 @@ import vizReducer from './reducers/viz';
 import * as actionCreators from './action-creators';
 import ReduxThunk from 'redux-thunk';
 
-//import 'font-awesome/less/font-awesome.less';
+import 'font-awesome/less/font-awesome.less';
 import 'bootstrap/less/bootstrap.less';
 
 const reducer = combineReducers({

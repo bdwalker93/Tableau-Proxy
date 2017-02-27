@@ -14,15 +14,24 @@ const ServerSelection = React.createClass({
   },
   render() {
     return (
-      <form onSubmit={this.connect}>
+      <form style={{ margin:'20px'}} onSubmit={this.connect}>
+        <div style={{
+          height: '30vh',
+          backgroundImage: 'url(/img/tableau_sign_in_logo.svg)',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+        }}></div>
         <FormGroup controlId="formBasicText" >
           <FormControl
+            style={{ marginBottom: '20px' }}
             type="text"
             value={this.state.value}
-            placeholder="Enter text"
+            placeholder="https://server.name"
             onChange={this.handleChange}
           />
-          <Button onClick={this.connect}>Connect</Button>
+          <Button block onClick={this.connect}>Connect
+            <i style={{paddingTop: '.3em', color: '#ccc'}} className="fa fa-chevron-right pull-right" aria-hidden="true"></i>
+          </Button>
         </FormGroup>
       </form>
     );
