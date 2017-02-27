@@ -14,13 +14,17 @@ const ServerSelection = React.createClass({
   },
   render() {
     return (
-      <form style={{ margin:'20px'}} onSubmit={this.connect}>
-        <div style={{
-          height: '30vh',
-          backgroundImage: 'url(/img/tableau_sign_in_logo.svg)',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-        }}></div>
+      <div style={{backgroundColor: '#f9f9f9'}}>
+        <div style={{width: '100%', height: '50px', backgroundColor: 'white', borderBottom: '1px solid #eee', color: '#2f2f2f'}}>
+          <div style={{textAlign: 'center', fontSize: '22px', lineHeight: '48px'}}>Choose a server</div>
+        </div>
+        <form style={{ margin:'20px'}} onSubmit={this.connect}>
+          <div style={{
+            height: '30vh',
+            backgroundImage: 'url(/img/tableau_sign_in_logo.svg)',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+          }}></div>
         <FormGroup controlId="formBasicText" >
           <FormControl
             style={{ marginBottom: '20px' }}
@@ -34,6 +38,7 @@ const ServerSelection = React.createClass({
           </Button>
         </FormGroup>
       </form>
+    </div>
     );
   },
   connect(e) {
