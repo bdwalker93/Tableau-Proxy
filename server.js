@@ -5,11 +5,23 @@ var https = require('https');
 var httpProxy = require('http-proxy');
 var express = require('express');
 var harmon = require('harmon');
+var Promise = require('bluebird');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const ExpressReactViews = require('express-react-views').createEngine;
+const glob = Promise.promisify(require('glob'));
 
-var Promise = require('bluebird');
 var app = express();
+
+// Resolves with a function taking a template filename (in templateRoot)
+// and parameters (React props) and resolving the HTML
+function createRenderer(templateRoot) {
+  return glob(templateRoot+'/**/*.jsx').then(views => (name, params) => {
+    var render = Promise.promisify(ExpressReactViews({ beautify: true }))
+    var renderOptions = Object.assign({ settings: { views } }, params);
+    return render(path.join(templateRoot, name), renderOptions)
+  })
+}
 
 const dynamicProxyMiddleware = (req, res) => {
   let proxy = httpProxy.createServer({
@@ -81,9 +93,12 @@ const signinRewriteMiddleware = (req, res, next) => {
     func: node => {
       var rs = node.createReadStream();
       var ws = node.createWriteStream({outer: false});
-      ws.write(`<a href="/">Back</a>`);
-      ws.write(`<span>${req.cookies.PROXY_TARGET}</span>`);
-      rs.pipe(ws, {end: true});
+      createRenderer(__dirname+'/react').then(render=>{
+        render('components/SignInHeader.jsx', req.cookies).then(html=>{
+          ws.write(html);
+          rs.pipe(ws, {end: true});
+        })
+      });
     }
   });
 
