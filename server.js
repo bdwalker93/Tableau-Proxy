@@ -6,6 +6,7 @@ var httpProxy = require('http-proxy');
 var express = require('express');
 var harmon = require('harmon');
 var Promise = require('bluebird');
+var url = require('url');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const ExpressReactViews = require('express-react-views').createEngine;
@@ -94,7 +95,8 @@ const signinRewriteMiddleware = (req, res, next) => {
       var rs = node.createReadStream();
       var ws = node.createWriteStream({outer: false});
       createRenderer(__dirname+'/react').then(render=>{
-        render('components/SignInHeader.jsx', req.cookies).then(html=>{
+        let target = url.parse(req.cookies.PROXY_TARGET).hostname;
+        render('components/SignInHeader.jsx', { target }).then(html=>{
           ws.write(html);
           rs.pipe(ws, {end: true});
         })

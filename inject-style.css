@@ -1,3 +1,7 @@
+.tb-body {
+  background-color: #f9f9f9;
+}
+
 /* login */
 .tb-login {
   min-width: inherit;
@@ -14,6 +18,7 @@
 
 .tb-login-site-picker-container {
   width: 85%;
+  margin: auto;
 }
 
 .tb-login-site-picker .tb-data-grid-cell, .tb-login-site-picker .tb-data-grid-row-background, .tb-login-site-picker .tb-data-grid-cell-text, .tb-login-site-picker .tb-data-grid-no-matching-results {
@@ -25,4 +30,12 @@
 /* signin page */
 .tb-app,.tb-app-inner {
   position: initial;
+}
+
+.tb-login-text-box {
+  width: 100% !important;
+}
+
+.tb-login-site-picker {
+  width: 100%;
 }
