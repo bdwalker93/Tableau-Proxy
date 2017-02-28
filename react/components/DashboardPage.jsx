@@ -20,6 +20,7 @@ import cookies from "browser-cookies";
 const getServerHostname = () => new URL(cookies.get('PROXY_TARGET')).hostname;
 
 import './DashboardPage.less';
+import './popover.less';
 
 const Dashboard = (props) => {
   const {
@@ -41,26 +42,35 @@ const Dashboard = (props) => {
     logout
   } = props;
 
-  const showPopover = ()=>{
-    
-  };
 
   return <Page>
     <Toolbar>
 
+
       <OverlayTrigger trigger="click" rootClose
         placement="bottom" overlay={<Popover id="site-switcher">
-          {sites.map(site=><div key={site.urlName}>
-            <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}</a>
-          { currentSite.urlName === site.urlName ? 
-              <i className="fa fa-check" aria-hidden="true"></i>
-              : null 
-          }
-        </div>)}
+          <div>
+            <a href="#" onClick={logout}>Sign Out</a>
+          </div>
+          <div>
+            <a href="https://github.com/bdwalker93/Tableau-Proxy/issues?utf8=%E2%9C%93&q=is%3Aissue">Help</a>
+          </div>
+          { sites.length > 0 ? <span>
+            <span className="section-name">SITES</span>
+            {sites.map(site=>
+              <div key={site.urlName}>
+                <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}</a>
+                { currentSite.urlName === site.urlName ? 
+                    <i className="fa fa-check" aria-hidden="true"></i>
+                    : null 
+                }
+              </div>
+            )}
+          </span> : null }
         </Popover>}>
         <span>
-          <img src="/img/logo.png" onClick={showPopover} style={{height: '88%'}} />
-          <span onClick={showPopover} style={{
+          <img src="/img/logo.png" style={{height: '88%'}} />
+          <span style={{
             color: '#505050',
             left: '50px',
             top: '5px',
@@ -69,7 +79,7 @@ const Dashboard = (props) => {
           }}>
           {currentUser.displayName}
         </span>
-        <span onClick={showPopover} style={{
+        <span style={{
           fontSize: '18px',
           position: 'absolute',
           color: '#262626',
@@ -80,7 +90,6 @@ const Dashboard = (props) => {
         </span>
       </span>
       </OverlayTrigger>
-
     </Toolbar>
 
 
