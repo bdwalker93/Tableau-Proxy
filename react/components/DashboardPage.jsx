@@ -41,30 +41,48 @@ const Dashboard = (props) => {
     logout
   } = props;
 
-  const showPopover = ()=>{};
+  const showPopover = ()=>{
+    
+  };
 
   return <Page>
     <Toolbar>
-      <img src="/img/logo.png" style={{height: '88%'}} />
-      <span style={{
-        color: '#505050',
-        left: '50px',
-        top: '5px',
-        fontSize: '14px',
-        position: 'absolute',
-        }}>
-        {currentUser.displayName}
+
+      <OverlayTrigger trigger="click" rootClose
+        placement="bottom" overlay={<Popover id="site-switcher">
+          {sites.map(site=><div key={site.urlName}>
+            <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}</a>
+          { currentSite.urlName === site.urlName ? 
+              <i className="fa fa-check" aria-hidden="true"></i>
+              : null 
+          }
+        </div>)}
+        </Popover>}>
+        <span>
+          <img src="/img/logo.png" onClick={showPopover} style={{height: '88%'}} />
+          <span onClick={showPopover} style={{
+            color: '#505050',
+            left: '50px',
+            top: '5px',
+            fontSize: '14px',
+            position: 'absolute',
+          }}>
+          {currentUser.displayName}
+        </span>
+        <span onClick={showPopover} style={{
+          fontSize: '18px',
+          position: 'absolute',
+          color: '#262626',
+          top: '20px',
+          left: '50px',
+          display: 'block' }}>
+          {getServerHostname()}: {currentSite.name}
+        </span>
       </span>
-      <span style={{
-        fontSize: '18px',
-        position: 'absolute',
-        color: '#262626',
-        top: '20px',
-        left: '50px',
-        display: 'block' }}>
-        {getServerHostname()}: {currentSite.name}
-      </span>
+      </OverlayTrigger>
+
     </Toolbar>
+
 
     <SearchForm search={search} tab={tab} />
 
