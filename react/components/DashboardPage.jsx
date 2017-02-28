@@ -8,6 +8,10 @@ import { DashboardHeader } from './DashboardHeader';
 import { SORT_OPTIONS, ORDER_OPTIONS } from '../sorting';
 
 import InfiniteScroll from 'react-infinite-scroller';
+import { Page } from './Page';
+import { Toolbar } from './Toolbar';
+
+import { SearchForm } from './SearchForm';
 
 import './DashboardPage.less';
 
@@ -30,48 +34,60 @@ const Dashboard = (props) => {
     logout
   } = props;
 
-  return <div className="dashboard-page">
+  return <Page>
+    <Toolbar>
+        <span style={{color: '#ccc', fontSize: '5px'}}>UserName</span>
+        <span style={{fontSize: '10px'}}>Server</span>
+    </Toolbar>
 
-    <DashboardHeader
-      logout={logout}
-      total={workbookIds.length}
-      sites={sites}
-      currentSite={currentSite}
-      switchSite={switchSite}
-      tab={tab}
-      search={search}
-      sortId={sortId}
-      sortOptions={SORT_OPTIONS}
-      orderId={orderId}
-      orderOptions={ORDER_OPTIONS}
-    />
+    <SearchForm search={search} tab={tab} />
 
-    <div className="dashboard-content">
-      <InfiniteScroll
-        pageStart={0}
-        loadMore={loadMore}
-        initialLoad={true}
-        hasMore={hasMore}
-        loader={<div className="loader">Loading ...</div>}
-        useWindow={true}
-        threshold={500}
-      >
-        { workbookIds.map(id => <WorkbookListItem key={id} tab={tab}
-          workbook={workbooksById[id]} isFav={workbooksById[id].isFavorite}
-          onFavorite={() => {
-            if ( workbooksById[id].isFavorite ) {
-              deleteFavoriteWorkbook(id);
-            } else {
-              addFavoriteWorkbook(id);
-            }
-          }}
-        />)
+    <OverlayTrigger trigger="click" rootClose
+      placement="bottom" overlay={<Popover id="sort-option">
+        {sortOptions.map(sort=><div key={sort.id}>
+          <Link to={`/app/workbooks/${tab}/${sort.id}/${orderId}`}>{sort.label}</Link>
+        { sortId === sort.id ? 
+            <i className="fa fa-check" aria-hidden="true"></i>
+            : null 
         }
-      </InfiniteScroll>
-    </div>
-    
+      </div>)}
+      <hr/>
+      {orderOptions.map(order=><div key={order.id}>
+        <Link to={`/app/workbooks/${tab}/${sortId}/${order.id}`}>{order.label}</Link>
+        { orderId === order.id ? 
+            <i className="fa fa-check" aria-hidden="true"></i>
+            : null 
+        }
+      </div>)}
+      </Popover>}>
+      <Button>sort</Button>
+    </OverlayTrigger>
+
+
+    <InfiniteScroll
+      pageStart={0}
+      loadMore={loadMore}
+      initialLoad={true}
+      hasMore={hasMore}
+      loader={<div className="loader">Loading ...</div>}
+      useWindow={true}
+      threshold={500}
+    >
+      { workbookIds.map(id => <WorkbookListItem key={id} tab={tab}
+        workbook={workbooksById[id]} isFav={workbooksById[id].isFavorite}
+        onFavorite={() => {
+          if ( workbooksById[id].isFavorite ) {
+            deleteFavoriteWorkbook(id);
+          } else {
+            addFavoriteWorkbook(id);
+          }
+        }}
+      />)
+      }
+    </InfiniteScroll>
+
     <DashboardFooter />
-  </div>
+  </Page>
 }
 
 function mapStateToProps(state) {

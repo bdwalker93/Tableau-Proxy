@@ -1,33 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router'
-import { FormGroup, FormControl, Button, Popover, OverlayTrigger } from 'react-bootstrap';
-
-import './DashboardHeader.less';
-
-const SearchForm = React.createClass({
-  getInitialState() {
-    return { value: '' }
-  },
-  handleChange(e) {
-    const { tab, sortId, orderId } = this.props;
-    this.setState({ value: e.target.value });
-    this.props.search(e.target.value, tab, sortId, orderId);
-  },
-  render() {
-    return (
-      <form onSubmit={e=>e.preventDefault()}>
-        <FormGroup controlId="formBasicText">
-          <FormControl
-            type="text"
-            value={this.state.value}
-            placeholder="Enter text"
-            onChange={this.handleChange}
-          />
-        </FormGroup>
-      </form>
-    );
-  }
-});
+import { Button, Popover, OverlayTrigger } from 'react-bootstrap';
 
 export const DashboardHeader = ({
   tab,
@@ -84,7 +57,6 @@ export const DashboardHeader = ({
 
     </div>
     <div>
-      <SearchForm search={search} tab={tab} />
     </div>
   </div>
 }
