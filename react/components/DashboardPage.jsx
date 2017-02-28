@@ -6,12 +6,18 @@ import { WorkbookListItem } from './WorkbookListItem';
 import { DashboardFooter } from './DashboardFooter';
 import { DashboardHeader } from './DashboardHeader';
 import { SORT_OPTIONS, ORDER_OPTIONS } from '../sorting';
+import { Link } from 'react-router';
 
 import InfiniteScroll from 'react-infinite-scroller';
 import { Page } from './Page';
 import { Toolbar } from './Toolbar';
 
 import { SearchForm } from './SearchForm';
+import { Button, Popover, OverlayTrigger } from 'react-bootstrap';
+
+import cookies from "browser-cookies";
+
+const getServerHostname = () => new URL(cookies.get('PROXY_TARGET')).hostname;
 
 import './DashboardPage.less';
 
@@ -24,6 +30,7 @@ const Dashboard = (props) => {
     loadMore,
     sites,
     currentSite,
+    currentUser,
 
     addFavoriteWorkbook,
     deleteFavoriteWorkbook,
@@ -34,17 +41,36 @@ const Dashboard = (props) => {
     logout
   } = props;
 
+  const showPopover = ()=>{};
+
   return <Page>
     <Toolbar>
-        <span style={{color: '#ccc', fontSize: '5px'}}>UserName</span>
-        <span style={{fontSize: '10px'}}>Server</span>
+      <img src="/img/logo.png" style={{height: '88%'}} />
+      <span style={{
+        color: '#505050',
+        left: '50px',
+        top: '5px',
+        fontSize: '14px',
+        position: 'absolute',
+        }}>
+        {currentUser.displayName}
+      </span>
+      <span style={{
+        fontSize: '18px',
+        position: 'absolute',
+        color: '#262626',
+        top: '20px',
+        left: '50px',
+        display: 'block' }}>
+        {getServerHostname()}: {currentSite.name}
+      </span>
     </Toolbar>
 
     <SearchForm search={search} tab={tab} />
 
     <OverlayTrigger trigger="click" rootClose
       placement="bottom" overlay={<Popover id="sort-option">
-        {sortOptions.map(sort=><div key={sort.id}>
+        {SORT_OPTIONS.map(sort=><div key={sort.id}>
           <Link to={`/app/workbooks/${tab}/${sort.id}/${orderId}`}>{sort.label}</Link>
         { sortId === sort.id ? 
             <i className="fa fa-check" aria-hidden="true"></i>
@@ -52,7 +78,7 @@ const Dashboard = (props) => {
         }
       </div>)}
       <hr/>
-      {orderOptions.map(order=><div key={order.id}>
+      {ORDER_OPTIONS.map(order=><div key={order.id}>
         <Link to={`/app/workbooks/${tab}/${sortId}/${order.id}`}>{order.label}</Link>
         { orderId === order.id ? 
             <i className="fa fa-check" aria-hidden="true"></i>
@@ -64,6 +90,7 @@ const Dashboard = (props) => {
     </OverlayTrigger>
 
 
+    {/*
     <InfiniteScroll
       pageStart={0}
       loadMore={loadMore}
@@ -85,6 +112,7 @@ const Dashboard = (props) => {
       />)
       }
     </InfiniteScroll>
+    */}
 
     <DashboardFooter />
   </Page>
