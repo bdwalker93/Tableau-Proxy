@@ -1,3 +1,5 @@
+import 'font-awesome/less/font-awesome.less';
+import 'bootstrap/less/bootstrap.less';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, Redirect, browserHistory } from 'react-router';
@@ -12,9 +14,6 @@ import workbooksReducer from './reducers/workbooks';
 import vizReducer from './reducers/viz';
 import * as actionCreators from './action-creators';
 import ReduxThunk from 'redux-thunk';
-
-import 'font-awesome/less/font-awesome.less';
-import 'bootstrap/less/bootstrap.less';
 
 const reducer = combineReducers({
   form: formReducer,

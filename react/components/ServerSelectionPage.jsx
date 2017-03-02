@@ -19,14 +19,14 @@ const ServerSelection = React.createClass({
       <Page renderToolbar={()=><div>
           <div style={{textAlign: 'center', fontSize: '22px', lineHeight: '48px'}}>Choose a server</div>
         </div>}>
-        <form style={{ margin:'20px'}} onSubmit={this.connect}>
+        <form style={{ padding: '0 20px' }} onSubmit={this.connect}>
           <div style={{
             height: '30vh',
             backgroundImage: 'url(/img/tableau_sign_in_logo.svg)',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
           }}></div>
-        <FormGroup controlId="formBasicText" >
+        <FormGroup style={{padding:'0 20px'}} controlId="formBasicText" >
           <FormControl
             style={{ marginBottom: '20px' }}
             type="text"

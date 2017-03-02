@@ -42,32 +42,39 @@ const Dashboard = (props) => {
     logout
   } = props;
 
+  let mainMenuItems = [];
+
+  mainMenuItems.push(
+    <div>
+      <a href="#" onClick={logout}>Sign Out</a>
+    </div>
+  )
+  mainMenuItems.push(
+    <div style={{borderBottom:0}}>
+      <a href="https://github.com/bdwalker93/Tableau-Proxy/issues?utf8=%E2%9C%93&q=is%3Aissue">Help</a>
+    </div>
+  )
+  if ( sites.length > 0 ) {
+    mainMenuItems.push(
+      <span className="section-name">SITES</span>
+    )
+    sites.map(site=>
+      mainMenuItems.push(
+        <div key={site.urlName}>
+          <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}</a>
+          { currentSite.urlName === site.urlName ? 
+              <i className="fa fa-check" aria-hidden="true"></i>
+              : null 
+          }
+        </div>
+      )
+    )
+  }
 
   return <Page>
     <Toolbar>
-
-
       <OverlayTrigger trigger="click" rootClose
-        placement="bottom" overlay={<Popover id="site-switcher">
-          <div>
-            <a href="#" onClick={logout}>Sign Out</a>
-          </div>
-          <div>
-            <a href="https://github.com/bdwalker93/Tableau-Proxy/issues?utf8=%E2%9C%93&q=is%3Aissue">Help</a>
-          </div>
-          { sites.length > 0 ? <span>
-            <span className="section-name">SITES</span>
-            {sites.map(site=>
-              <div key={site.urlName}>
-                <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}</a>
-                { currentSite.urlName === site.urlName ? 
-                    <i className="fa fa-check" aria-hidden="true"></i>
-                    : null 
-                }
-              </div>
-            )}
-          </span> : null }
-        </Popover>}>
+        placement="bottom" overlay={<Popover id='main-menu'>{mainMenuItems}</Popover>}>
         <span>
           <img src="/img/logo.png" style={{height: '88%'}} />
           <span style={{
