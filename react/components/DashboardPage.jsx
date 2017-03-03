@@ -5,14 +5,12 @@ import * as actionCreators from '../action-creators';
 import { WorkbookListItem } from './WorkbookListItem';
 import { DashboardFooter } from './DashboardFooter';
 import { DashboardHeader } from './DashboardHeader';
-import { SORT_OPTIONS, ORDER_OPTIONS } from '../sorting';
 import { Link } from 'react-router';
 
 import InfiniteScroll from 'react-infinite-scroller';
 import { Page } from './Page';
 import { Toolbar } from './Toolbar';
 
-import { SearchForm } from './SearchForm';
 import { Button, Popover, OverlayTrigger } from 'react-bootstrap';
 
 import cookies from "browser-cookies";
@@ -101,29 +99,7 @@ const Dashboard = (props) => {
       </OverlayTrigger>
     </Toolbar>
 
-
-    <SearchForm search={search} tab={tab} />
-
-    <OverlayTrigger trigger="click" rootClose
-      placement="bottom" overlay={<Popover id="sort-option">
-        {SORT_OPTIONS.map(sort=><div key={sort.id}>
-          <Link to={`/app/workbooks/${tab}/${sort.id}/${orderId}`}>{sort.label}</Link>
-        { sortId === sort.id ? 
-            <i className="fa fa-check" aria-hidden="true"></i>
-            : null 
-        }
-      </div>)}
-      <hr/>
-      {ORDER_OPTIONS.map(order=><div key={order.id}>
-        <Link to={`/app/workbooks/${tab}/${sortId}/${order.id}`}>{order.label}</Link>
-        { orderId === order.id ? 
-            <i className="fa fa-check" aria-hidden="true"></i>
-            : null 
-        }
-      </div>)}
-      </Popover>}>
-      <Button>sort</Button>
-    </OverlayTrigger>
+    <DashboardHeader {...props} />
 
     <InfiniteScroll
       className="container"

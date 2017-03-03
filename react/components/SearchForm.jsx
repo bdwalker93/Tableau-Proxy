@@ -13,11 +13,11 @@ export const SearchForm = React.createClass({
   render() {
     return (
       <form onSubmit={e=>e.preventDefault()}>
-        <FormGroup controlId="formBasicText">
+        <FormGroup controlId="formBasicText" style={{margin:0}}>
           <FormControl
             type="text"
             value={this.state.value}
-            placeholder="Enter text"
+            placeholder="Search"
             onChange={this.handleChange}
           />
         </FormGroup>
