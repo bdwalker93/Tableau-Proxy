@@ -2,7 +2,13 @@ import axios from 'axios';
 
 // https://github.com/mzabriskie/axios#cancellation
 export default function request(config) {
-  return axios(config).catch((err) => {
+  return axios(config).then(res=>{
+    if ( res && res.data && res.data.result && res.data.result.errors) {
+      console.log(res.data.result.errors);
+      throw new Error('Tableau threw errors');
+    }
+    return res;
+  }).catch((err) => {
 
     if (err.response.status === 500) {
       window.location = '/';

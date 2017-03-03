@@ -157,8 +157,10 @@ export function deleteFavoriteWorkbook(key) {
 }
 
 export function addFavoriteView(id) {
+  let jid = 'view:'+id;
   return function(dispatch, getState) {
     dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: true });
+    dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: jid, isFavorite: true });
     request({
       method: 'POST', 
       url: "/vizportal/api/web/v1/addFavorite",
@@ -166,13 +168,18 @@ export function addFavoriteView(id) {
         "method":"addFavorite",
         "params":{ "objectId": id, "objectType": 'view' }
       }
-    }).catch(()=> dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: false }));
+    }).catch(()=> {
+      dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: false })
+      dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: jid, isFavorite: false });
+    });
   }
 }
 
 export function deleteFavoriteView(id) {
+  let jid = 'view:'+id;
   return function(dispatch, getState) {
     dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: false });
+    dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: jid, isFavorite: false });
     request({
       method: 'POST', 
       url: "/vizportal/api/web/v1/removeFavorite",
@@ -180,7 +187,10 @@ export function deleteFavoriteView(id) {
         "method":"removeFavorite",
         "params":{ "objectId": id, "objectType": 'view' }
       }
-    }).catch(()=> dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: true }));
+    }).catch(()=> {
+      dispatch({ type: 'UPDATE_VIZ_FAV', id, isFavorite: true })
+      dispatch({ type: 'UPDATE_WORKBOOK_FAV', id: jid, isFavorite: true });
+    });
   }
 }
 
@@ -264,7 +274,6 @@ export function getSitesAndSetCurrent() {
         currentUser: res.data.result.user
       })
 
-      console.log(res.status, res.data);
       let site = res.data.result.site;
 
       request({
@@ -377,10 +386,8 @@ export function connectToTableau(key) {
         "params":{ }
       }
     }).then(() =>{
-      console.log("going to signin");
       window.location = "/signin";
     }).catch(() => {
-      console.log("alerting");
       alert("Tablea Server Not Found");
     })
   }

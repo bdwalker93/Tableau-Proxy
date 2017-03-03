@@ -34,7 +34,9 @@ const Dashboard = (props) => {
     currentUser,
 
     addFavoriteWorkbook,
+    addFavoriteView,
     deleteFavoriteWorkbook,
+    deleteFavoriteView,
     viewFavoriteWorkbooks,
     viewRecentWorkbooks,
     switchSite,
@@ -45,18 +47,18 @@ const Dashboard = (props) => {
   let mainMenuItems = [];
 
   mainMenuItems.push(
-    <div>
+    <div key="logout">
       <a href="#" onClick={logout}>Sign Out</a>
     </div>
   )
   mainMenuItems.push(
-    <div style={{borderBottom:0}}>
+    <div key="help" style={{borderBottom:0}}>
       <a href="https://github.com/bdwalker93/Tableau-Proxy/issues?utf8=%E2%9C%93&q=is%3Aissue">Help</a>
     </div>
   )
   if ( sites.length > 0 ) {
     mainMenuItems.push(
-      <span className="section-name">SITES</span>
+      <span key="section-sites" className="section-name">SITES</span>
     )
     sites.map(site=>
       mainMenuItems.push(
@@ -123,8 +125,6 @@ const Dashboard = (props) => {
       <Button>sort</Button>
     </OverlayTrigger>
 
-
-    {/*
     <InfiniteScroll
       pageStart={0}
       loadMore={loadMore}
@@ -134,19 +134,27 @@ const Dashboard = (props) => {
       useWindow={true}
       threshold={500}
     >
-      { workbookIds.map(id => <WorkbookListItem key={id} tab={tab}
-        workbook={workbooksById[id]} isFav={workbooksById[id].isFavorite}
+      { workbookIds.map(jid => <WorkbookListItem key={jid} tab={tab}
+        workbook={workbooksById[jid]} isFav={workbooksById[jid].isFavorite}
         onFavorite={() => {
-          if ( workbooksById[id].isFavorite ) {
-            deleteFavoriteWorkbook(id);
+          const item  = workbooksById[jid];
+          if ( item.isFavorite ) {
+            if ( item.isWorkbook ) {
+              deleteFavoriteWorkbook(jid);
+            } else {
+              deleteFavoriteView(item.id);
+            }
           } else {
-            addFavoriteWorkbook(id);
+            if ( item.isWorkbook ) {
+              addFavoriteWorkbook(jid);
+            } else {
+              addFavoriteView(item.id);
+            }
           }
         }}
       />)
       }
     </InfiniteScroll>
-    */}
 
     <DashboardFooter />
   </Page>
