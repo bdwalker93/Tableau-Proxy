@@ -126,6 +126,7 @@ const Dashboard = (props) => {
     </OverlayTrigger>
 
     <InfiniteScroll
+      className="container"
       pageStart={0}
       loadMore={loadMore}
       initialLoad={true}
