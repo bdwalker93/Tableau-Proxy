@@ -11,7 +11,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { Page } from './Page';
 import { Toolbar } from './Toolbar';
 
-import { Button, Popover, OverlayTrigger } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import Popover from './Popover';
 
 import cookies from "browser-cookies";
 
@@ -73,38 +74,32 @@ const Dashboard = (props) => {
   }
 
   return <Page>
-    <Toolbar>
-      <OverlayTrigger trigger="click" rootClose
-        placement="bottom" overlay={<Popover id='main-menu'>{mainMenuItems}</Popover>}>
+    <Toolbar height='72px'>
+      <Popover id='main-menu' trigger={
         <span>
           <img src="/img/logo.png" style={{
             width: '32px',
-            margin: '6px 10px'
-          }} />
+            margin: '6px 10px' }} />
           <span style={{
             color: '#505050',
             left: '50px',
             top: '5px',
             fontSize: '14px',
+            position: 'absolute' }}>{currentUser.displayName}
+          </span>
+          <span style={{
+            fontSize: '18px',
             position: 'absolute',
-          }}>
-          {currentUser.displayName}
+            color: '#262626',
+            top: '20px',
+            left: '50px',
+            display: 'block' }}>{getServerHostname()}: {currentSite.name}
+          </span>
         </span>
-        <span style={{
-          fontSize: '18px',
-          position: 'absolute',
-          color: '#262626',
-          top: '20px',
-          left: '50px',
-          display: 'block' }}>
-          {getServerHostname()}: {currentSite.name}
-        </span>
-      </span>
-      </OverlayTrigger>
+      }>{mainMenuItems}</Popover>
+
       <DashboardHeader {...props} />
     </Toolbar>
-
-    <div style={{ height: '72px' }} />
 
     <InfiniteScroll
       className="container"
