@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import './VizHeader.less';
 import FavoriteStar from './FavoriteStar';
 import { browserHistory } from 'react-router';
+import { Toolbar } from './Toolbar';
 
 var BzIframe = React.createClass({
 
@@ -34,8 +35,14 @@ const Viz = ({
   deleteFavoriteView,
   addFavoriteView
 }) => <div className="viz-page">
-    <div className="viz-header">
-      <Button onClick={()=>browserHistory.push('/app/workbooks/'+tab)}>back</Button>
+  <Toolbar>
+    <div style={{textAlign: 'center', minHeight: '50px'}}>
+      <Button  style={{float: 'left'}} onClick={()=>browserHistory.push('/app/workbooks/'+tab)}>
+        <i style={{fontSize: '30px', paddingTop: '.2em', color: '#eb8f50', opacity: '0.8'}} className="fa fa-chevron-left pull-right" aria-hidden="true"></i>
+      </Button>
+      <span className="view-name">
+        {views.map(view=> viewPath === view.path ? view.name : null)}
+      </span>
       <OverlayTrigger trigger="click" rootClose
         placement="bottom" overlay={<Popover id="view-switcher">
           {views.map(view=><div key={view.id}>
@@ -52,22 +59,28 @@ const Viz = ({
               : null 
           }
         </div>)}
-        </Popover>}>
-        <Button>views</Button>
-      </OverlayTrigger>
-    </div>
+      </Popover>}>
+      <Button style={{float: 'right'}}>
+        <img src="/img/display_views_button.png" style={{
+          width: '35px', 
+          paddingTop: '4px'
+        }} />
+    </Button>
+    </OverlayTrigger>
+  </div>
+</Toolbar>
 
-    { site && viewPath ? 
-        <BzIframe onLoad={(iframe)=>{
-          if (!  iframe.contentWindow )  return ;
-          // setTimeout(()=>{
-            let $ = iframe.contentWindow.jQuery;
-            let t = $('.tableau')[0];
-            let zoom = t.clientWidth / t.scrollWidth * 100;
-            $(t).css({zoom: zoom+'%'});
-            //}, 0);
-        }} src={`/t/${site}/views/${viewPath}?:embed=y&:showVizHome=n&:toolbar=top&:openAuthoringInTopWindow=true&:browserBackButtonUndo=true&:reloadOnCustomViewSave=true&:showShareOptions=true&:size=100,183`}/>
-        : null }
+{ site && viewPath ? 
+            <BzIframe onLoad={(iframe)=>{
+              if (!  iframe.contentWindow )  return ;
+              // setTimeout(()=>{
+              let $ = iframe.contentWindow.jQuery;
+              let t = $('.tableau')[0];
+              let zoom = t.clientWidth / t.scrollWidth * 100;
+              $(t).css({zoom: zoom+'%'});
+              //}, 0);
+            }} src={`/t/${site}/views/${viewPath}?:embed=y&:showVizHome=n&:toolbar=top&:openAuthoringInTopWindow=true&:browserBackButtonUndo=true&:reloadOnCustomViewSave=true&:showShareOptions=true&:size=100,183`}/>
+          : null }
 </div>
 
 function mapStateToProps(state) {
