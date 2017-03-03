@@ -133,7 +133,7 @@ const Dashboard = (props) => {
       }
     </InfiniteScroll>
 
-    <DashboardFooter />
+    <DashboardFooter activeTab={tab}/>
   </Page>
 }
 
