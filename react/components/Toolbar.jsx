@@ -3,6 +3,7 @@ import React from 'react';
 export const Toolbar = (props)=>
   <div style={{
     width: '100%',
+    height: props.height || '50px',
     minHeight: '50px',
     backgroundColor: 'white',
     borderBottom: '1px solid #eee',
