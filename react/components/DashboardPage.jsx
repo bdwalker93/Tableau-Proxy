@@ -76,7 +76,10 @@ const Dashboard = (props) => {
       <OverlayTrigger trigger="click" rootClose
         placement="bottom" overlay={<Popover id='main-menu'>{mainMenuItems}</Popover>}>
         <span>
-          <img src="/img/logo.png" style={{height: '88%'}} />
+          <img src="/img/logo.png" style={{
+            width: '32px',
+            margin: '6px 10px'
+          }} />
           <span style={{
             color: '#505050',
             left: '50px',
@@ -97,9 +100,10 @@ const Dashboard = (props) => {
         </span>
       </span>
       </OverlayTrigger>
+      <DashboardHeader {...props} />
     </Toolbar>
 
-    <DashboardHeader {...props} />
+    <div style={{ height: '72px' }} />
 
     <InfiniteScroll
       className="container"
