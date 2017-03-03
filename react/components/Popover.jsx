@@ -5,7 +5,9 @@ const MyPopover = React.createClass({
   render: function() {
     const childrenWithProps = React.Children.map(this.props.children, (child) => {
       return React.cloneElement(child, {
-        onClick: ()=> document.body.click()
+        onClick: ()=> {
+          setTimeout(()=> document.body.click(), 400);
+        }
       })
     });
 

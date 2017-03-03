@@ -2,12 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as actionCreators from '../action-creators';
 import './VizPage.less';
-import { Button, Popover, OverlayTrigger } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Link } from 'react-router';
 import './VizHeader.less';
 import FavoriteStar from './FavoriteStar';
 import { browserHistory } from 'react-router';
 import { Toolbar } from './Toolbar';
+import Popover from './Popover';
 
 var BzIframe = React.createClass({
 
@@ -43,30 +44,32 @@ const Viz = ({
       <span className="view-name">
         {views.map(view=> viewPath === view.path ? view.name : null)}
       </span>
-      <OverlayTrigger trigger="click" rootClose
-        placement="bottom" overlay={<Popover id="view-switcher">
-          {views.map(view=><div key={view.id}>
-            <FavoriteStar onClick={()=>{
-              if ( view.isFavorite ) {
-                deleteFavoriteView(view.id);
-              } else {
-                addFavoriteView(view.id);
-              }
-            }} isFavorite={view.isFavorite}/>
-          <Link to={`/app/workbooks/${tab}/${view.workbookId}/views/${view.path}`}>{view.name}</Link>
+      <Popover id="view-switcher" trigger={
+        <Button style={{float: 'right'}}>
+          <img src="/img/display_views_button.png" style={{
+            width: '35px', 
+            paddingTop: '4px' }} />
+        </Button>
+      }>
+        {views.map(view=><div key={view.id}>
+        <Link to={`/app/workbooks/${tab}/${view.workbookId}/views/${view.path}`}>
+          <FavoriteStar onClick={(e)=>{
+            e.preventDefault();
+            e.stopPropagation();
+            if ( view.isFavorite ) {
+              deleteFavoriteView(view.id);
+            } else {
+              addFavoriteView(view.id);
+            }
+          }} isFavorite={view.isFavorite}/>
+          {view.name}
           { viewPath === view.path ? 
               <i className="fa fa-check" aria-hidden="true"></i>
               : null 
           }
-        </div>)}
-      </Popover>}>
-      <Button style={{float: 'right'}}>
-        <img src="/img/display_views_button.png" style={{
-          width: '35px', 
-          paddingTop: '4px'
-        }} />
-    </Button>
-    </OverlayTrigger>
+        </Link>
+      </div>)}
+    </Popover>
   </div>
 </Toolbar>
 

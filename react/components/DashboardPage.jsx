@@ -74,7 +74,7 @@ const Dashboard = (props) => {
   }
 
   return <Page>
-    <Toolbar height='72px'>
+    <Toolbar>
       <Popover id='main-menu' trigger={
         <span>
           <img src="/img/logo.png" style={{
@@ -102,6 +102,7 @@ const Dashboard = (props) => {
     </Toolbar>
 
     <InfiniteScroll
+      style={{paddingTop: '72px'}}
       className="container"
       pageStart={0}
       loadMore={loadMore}
