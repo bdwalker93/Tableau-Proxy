@@ -61,11 +61,12 @@ const Dashboard = (props) => {
     sites.map(site=>
       mainMenuItems.push(
         <div key={site.urlName}>
-          <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}</a>
-          { currentSite.urlName === site.urlName ? 
-              <i className="fa fa-check" aria-hidden="true"></i>
-              : null 
-          }
+          <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}
+            { currentSite.urlName === site.urlName ? 
+                <i className="fa fa-check" aria-hidden="true"></i>
+                : null 
+            }
+          </a>
         </div>
       )
     )
