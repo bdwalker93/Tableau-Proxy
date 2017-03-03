@@ -34,30 +34,39 @@ export const DashboardHeader = ({
         </OverlayTrigger>
       </div>
 
-      <div className="col-xs-3" style={{padding:0}}>
-        <OverlayTrigger trigger="click" rootClose
-          placement="bottom" overlay={<Popover id="sort-option">
-            {SORT_OPTIONS.map((sort, i)=><div key={sort.id} style={i===(SORT_OPTIONS.length-1) ? { borderBottom: 0 } : null }>
-              <Link to={`/app/workbooks/${tab}/${sort.id}/${orderId}`}>{sort.label}
-                { sortId === sort.id ? 
-                    <i className="fa fa-check" aria-hidden="true"></i>
-                    : null 
-                }
-              </Link>
-            </div>)}
-            <span key="section-order" className="section-name">ORDER</span>
-            {ORDER_OPTIONS.map(order=><div key={order.id}>
-              <Link to={`/app/workbooks/${tab}/${sortId}/${order.id}`}>{order.label}
-                { orderId === order.id ? 
-                    <i className="fa fa-check" aria-hidden="true"></i>
-                    : null 
-                }
-              </Link>
-            </div>)}
-          </Popover>}>
-          <Button block>sort</Button>
-        </OverlayTrigger>
-      </div>
+      { tab === 'recent' ? null : 
+        <div className="col-xs-3" style={{padding:0}}>
+          <OverlayTrigger trigger="click" rootClose
+            placement="bottom" overlay={<Popover id="sort-option">
+              {SORT_OPTIONS.map((sort, i)=><div key={sort.id} style={i===(SORT_OPTIONS.length-1) ? { borderBottom: 0 } : null }>
+                <Link to={`/app/workbooks/${tab}/${sort.id}/${orderId}`}>{sort.label}
+                  { sortId === sort.id ? 
+                      <i className="fa fa-check" aria-hidden="true"></i>
+                      : null 
+                  }
+                </Link>
+              </div>)}
+              <span key="section-order" className="section-name">ORDER</span>
+              {ORDER_OPTIONS.map(order=><div key={order.id}>
+                <Link to={`/app/workbooks/${tab}/${sortId}/${order.id}`}>{order.label}
+                  { orderId === order.id ? 
+                      <i className="fa fa-check" aria-hidden="true"></i>
+                      : null 
+                  }
+                </Link>
+              </div>)}
+            </Popover>}>
+            <Button block>
+              {
+                SORT_OPTIONS.find(i=>i.id === sortId).label
+              }{
+                <i style={{paddingLeft: '5px', color:'#717070'}}
+                  className={`fa fa-chevron-${orderId === 'asc' ? 'up' : 'down'}`}
+                  aria-hidden="true"></i>
+              }</Button>
+          </OverlayTrigger>
+        </div>
+      }
 
     </div>
   </div>
