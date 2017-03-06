@@ -20,18 +20,38 @@
   margin-bottom: @dashboard-footer-height;
 }
 
-.workbook-frame {
-  border: 1px solid blue;
-}
-
-.view-frame {
-  border: 1px solid red;
-}
-
 .popover#main-menu {
   .arrow {
     left: 32vw !important;
   }
   top: 46px !important;
   left: 15px !important;
+}
+
+.workbook-thumbnail {
+  padding-top: 7px;
+  padding-right: 3px;
+  height: 160px;
+}
+
+.frame {
+  background-size: 190px 180px;
+  background-repeat: no-repeat;
+  height: 180px;
+  padding-left: 7px;
+}
+
+.workbook-frame {
+  background-image: url(/img/workbook-frame.png);
+}
+
+.view-frame {
+  background-image: url(/img/view-frame.png);
+
+  .workbook-thumbnail {
+    padding-top: 7px;
+    padding-right: 0px;
+    height: 173px;
+    width: 176px;
+  }
 }
