@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import * as actionCreators from '../action-creators';
 import cookies from "browser-cookies";
 
+import url from "url";
+
 import { Page } from './Page';
 
 const ServerSelection = React.createClass({
@@ -12,7 +14,6 @@ const ServerSelection = React.createClass({
   },
   handleChange(e) {
     this.setState({ value: e.target.value });
-    cookies.set("PROXY_TARGET", e.target.value); 
   },
   render() {
     return (
@@ -47,7 +48,18 @@ const ServerSelection = React.createClass({
   },
   connect(e) {
     e.preventDefault();
-    this.props.connectToTableau(this.state.value)
+    var serverURL = this.state.value;
+    var parsedURL = url.parse(serverURL);;
+
+    if(!parsedURL.protocol){
+      serverURL = "https://" + serverURL;
+      parsedURL = url.parse(serverURL);
+    }else if(parsedURL.protocol !== "https"){
+      parsedURL.protocol = "https";
+    }
+
+    cookies.set("PROXY_TARGET", parsedURL.href); 
+    this.props.connectToTableau();
   }
 });
 

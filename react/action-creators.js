@@ -376,7 +376,7 @@ export function search(query, tab, sortId, orderId) {
   }
 }
 
-export function connectToTableau(key) {
+export function connectToTableau() {
   return function(dispatch, getState) {
     request({
       method: 'POST', 
