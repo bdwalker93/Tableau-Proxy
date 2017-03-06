@@ -69,7 +69,7 @@ function combineResult (wbRes=emptyWorkbooksResult, vRes=emptyViewsResult) {
   }
 }
 
-export default function(state = init, action) {
+export default function(state = init, action={}) {
   switch (action.type) {
     case 'SET_CURRENT_SITE': {
       return { ...state, currentSite: action.currentSite }
