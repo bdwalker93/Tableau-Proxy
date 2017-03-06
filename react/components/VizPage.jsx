@@ -47,7 +47,7 @@ const Viz = ({
       <Popover id="view-switcher" trigger={
         <Button style={{float: 'right'}}>
           <img src="/img/display_views_button.png" style={{
-            width: '35px', 
+            width: '30px', 
             paddingTop: '4px' }} />
         </Button>
       }>
