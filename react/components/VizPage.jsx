@@ -51,9 +51,9 @@ const Viz = ({
             paddingTop: '4px' }} />
         </Button>
       }>
-        {views.map(view=><div key={view.id}>
+        {views.map(view=><div style={{marginLeft: '0px'}}key={view.id}>
         <Link to={`/app/workbooks/${tab}/${view.workbookId}/views/${view.path}`}>
-          <FavoriteStar onClick={(e)=>{
+          <FavoriteStar style={{paddingRight: '10px'}} onClick={(e)=>{
             e.preventDefault();
             e.stopPropagation();
             if ( view.isFavorite ) {
@@ -62,9 +62,11 @@ const Viz = ({
               addFavoriteView(view.id);
             }
           }} isFavorite={view.isFavorite}/>
+        <span style={{lineHeight: '29px'}}>
           {view.name}
+        </span>
           { viewPath === view.path ? 
-              <i className="fa fa-check" aria-hidden="true"></i>
+              <i className="fa fa-check" style={{lineHeight: '27px'}} aria-hidden="true"></i>
               : null 
           }
         </Link>
