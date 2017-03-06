@@ -22,12 +22,12 @@ export const WorkbookListItem = ({
   onFavorite
 }) =>
 <div className={`row workbook-item ${parseInt(size) > 1 ? 'multi' : ''}`}>
-  <div className="col-xs-6">
+  <div className={`col-xs-6 frame ${isWorkbook ? 'workbook-frame' : 'view-frame'}`}>
     <Link to={`/app/workbooks/${tab}/${workbookId}/views/${defaultViewUrl}`}  className="workbook-thumbnail-container">
       <img className="workbook-thumbnail" src={thumbnailUrl} />
     </Link>
   </div>
-  <div className={`col-xs-6 ${isWorkbook ? 'workbook-frame' : 'view-frame'}`}>
+  <div className={`col-xs-6`}>
     <p>{name}</p>
     <p>{ownerName}</p>
     <p>{moment(updatedAt).format('L, LT')}</p>

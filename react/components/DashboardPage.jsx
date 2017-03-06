@@ -102,7 +102,7 @@ const Dashboard = (props) => {
     </Toolbar>
 
     <InfiniteScroll
-      style={{paddingTop: '72px'}}
+      style={{paddingTop: '72px', paddingBottom: '72px', backgroundColor: 'rgb(249, 249, 249)'}}
       className="container"
       pageStart={0}
       loadMore={loadMore}
