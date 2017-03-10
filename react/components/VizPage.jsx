@@ -42,7 +42,7 @@ const Viz = ({
         <i style={{fontSize: '30px', paddingTop: '.2em', color: '#eb8f50', opacity: '0.8'}} className="fa fa-chevron-left pull-right" aria-hidden="true"></i>
       </Button>
       <span className="view-name">
-        {views.map(view=> viewPath === view.path ? truncateViewName(view.name) : null)}
+        {views.map(view=> viewPath === view.path ? truncateViewName(view.name, 24) : null)}
       </span>
       <Popover id="view-switcher" trigger={
         <Button style={{float: 'right'}}>
@@ -63,7 +63,7 @@ const Viz = ({
             }
           }} isFavorite={view.isFavorite}/>
         <span style={{lineHeight: '29px'}}>
-          {view.name}
+          {truncateViewName(view.name, 17)}
         </span>
           { viewPath === view.path ? 
               <i className="fa fa-check" style={{lineHeight: '27px'}} aria-hidden="true"></i>
@@ -87,8 +87,7 @@ const Viz = ({
             }} src={`/t/${site}/views/${viewPath}?:embed=y&:showVizHome=n&:toolbar=top&:openAuthoringInTopWindow=true&:browserBackButtonUndo=true&:reloadOnCustomViewSave=true&:showShareOptions=true&:size=100,183`}/>
           : null }
 </div>
-  function truncateViewName(name){
-    var trunkLength = 24;
+  function truncateViewName(name, trunkLength){
     if(name.length > trunkLength){
       return name.substring(0, trunkLength - 1) + "...";
     }
