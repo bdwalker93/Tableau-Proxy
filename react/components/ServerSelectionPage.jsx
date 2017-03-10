@@ -35,12 +35,17 @@ const ServerSelection = React.createClass({
             placeholder="https://server.name"
             onChange={this.handleChange}
           />
-          <Button block style={{
-            backgroundColor: '#eb8f50',
-            color: '#fff'
-          }} onClick={this.connect}>Connect
+          <div>
+            <Button block style={{
+              backgroundColor: '#eb8f50',
+              color: '#fff',
+              width: '83%',
+              height: '44px',
+              margin: '0 auto'
+            }} onClick={this.connect}>Connect
             <i style={{paddingTop: '.3em', color: '#fff'}} className="fa fa-chevron-right pull-right" aria-hidden="true"></i>
           </Button>
+        </div>
         </FormGroup>
       </form>
     </Page>
