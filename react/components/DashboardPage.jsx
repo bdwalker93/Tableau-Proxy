@@ -15,6 +15,7 @@ import { Button } from 'react-bootstrap';
 import Popover from './Popover';
 
 import cookies from "browser-cookies";
+import { truncateViewName } from './utils';
 
 const getServerHostname = () => new URL(cookies.get('PROXY_TARGET')).hostname;
 
@@ -62,7 +63,8 @@ const Dashboard = (props) => {
     sites.map(site=>
       mainMenuItems.push(
         <div key={site.urlName}>
-          <a href="#" onClick={()=>switchSite(site.urlName, tab)}>{site.name}
+          <a href="#" onClick={()=>switchSite(site.urlName, tab)}>
+            {truncateViewName(site.name, 22)}
             { currentSite.urlName === site.urlName ? 
                 <i className="fa fa-check" aria-hidden="true"></i>
                 : null 
@@ -87,7 +89,8 @@ const Dashboard = (props) => {
             fontSize: '14px',
             position: 'absolute' }}>{currentUser.displayName}
           </span>
-          <span style={{
+          <span className="truncate" style={{
+            width: '80%',
             fontSize: '18px',
             position: 'absolute',
             color: '#262626',
