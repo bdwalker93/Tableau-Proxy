@@ -4,15 +4,28 @@
   margin-top: 20px;
   margin-bottom: 20px;
   overflow: hidden;
+
+
+  p {
+    margin: 0;
+    color: #666666;
+  }
+
+  .name {
+    color: #4F4F4F;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    width: 100%;
+    overflow: hidden;
+  }
+
+
+
 }
 
 .fav-star > img {
   width: 30px;
   height: 30px;
-}
-
-.workbook-thumbnail {
-  width: 100%;
 }
 
 .dashboard-content {
@@ -28,31 +41,28 @@
   left: 15px !important;
 }
 
-.workbook-thumbnail {
-  padding-top: 7px;
-  padding-right: 3px;
-  height: 160px;
-  width: 167px;
-}
-
 .frame {
-  background-size: 190px 180px;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
-  height: 180px;
-  padding-left: 7px;
+  padding: 0;
 }
 
 .workbook-frame {
   background-image: url(/img/workbook-frame.png);
 }
 
+.workbook-thumbnail {
+  width: 100%;
+  padding-bottom: 12%;
+  padding-right: 10%;
+  padding-left: 4%;
+  padding-top: 4%;
+}
+
 .view-frame {
   background-image: url(/img/view-frame.png);
 
   .workbook-thumbnail {
-    padding-top: 7px;
-    padding-right: 0px;
-    height: 173px;
-    width: 176px;
+    padding: 4%;
   }
 }

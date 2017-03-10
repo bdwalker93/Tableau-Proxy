@@ -27,11 +27,11 @@ export const WorkbookListItem = ({
       <img className="workbook-thumbnail" src={thumbnailUrl} />
     </Link>
   </div>
-  <div className={`col-xs-6`}>
-    <p>{name}</p>
-    <p>{ownerName}</p>
-    <p>{moment(updatedAt).format('L, LT')}</p>
-    <p>{projectName}</p>
+  <div className={`col-xs-6`} style={{paddingTop: '10px'}}>
+    <p className='name'>{name}</p>
+    <p className='owner-name'>{ownerName}</p>
+    <p className='date'>{moment(updatedAt).format('M/D/YY, H:MM A')}</p>
+    <p className='project-name'>{projectName}</p>
     <FavoriteStar onClick={onFavorite} isFavorite={isFav}/>
   </div>
 </div>
