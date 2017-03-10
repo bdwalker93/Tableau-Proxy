@@ -9,6 +9,7 @@ import FavoriteStar from './FavoriteStar';
 import { browserHistory } from 'react-router';
 import { Toolbar } from './Toolbar';
 import Popover from './Popover';
+import { truncateViewName } from './utils';
 
 var BzIframe = React.createClass({
 
@@ -87,11 +88,6 @@ const Viz = ({
             }} src={`/t/${site}/views/${viewPath}?:embed=y&:showVizHome=n&:toolbar=top&:openAuthoringInTopWindow=true&:browserBackButtonUndo=true&:reloadOnCustomViewSave=true&:showShareOptions=true&:size=100,183`}/>
           : null }
 </div>
-  function truncateViewName(name, trunkLength){
-    if(name.length > trunkLength){
-      return name.substring(0, trunkLength - 1) + "...";
-    }
-  }
 
 function mapStateToProps(state) {
   console.log('STATE', state.viz.views);
