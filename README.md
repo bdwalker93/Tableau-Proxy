@@ -1,3 +1,18 @@
+Table of Contents
+=================
+
+   * [Tableau Proxy](#tableau-proxy)
+      * [Introduction](#introduction)
+         * [About the Backend](#about-the-backend)
+         * [About the Frontend](#about-the-frontend)
+      * [Platform Dependencies](#platform-dependencies)
+      * [Instructions](#instructions)
+   * [Deployment Guide](#deployment-guide)
+      * [Install Node.js](#install-nodejs)
+      * [Get PM2](#get-pm2)
+      * [Set PM2 to run on startup](#set-pm2-to-run-on-startup)
+      * [Deploying Tableau-Proxy with PM2](#deploying-tableau-proxy-with-pm2)
+
 # Tableau Proxy
 
 ## Introduction
