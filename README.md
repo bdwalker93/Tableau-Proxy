@@ -1,19 +1,49 @@
-# Administrative Guide
+# Tableau Proxy
 
-This document will walk you through installation of the application on the following platforms:
+## Introduction
 
-* Amazon Linux (EC2)
+This project serves a mobile-web client for Tableau.
 
-*Don't use this guide for development.*
+In order to utilize Tableau's rich, but unpublished REST API (`/vizportal/api/web/v1`) certain steps had to be taken, such as the inclusion of a proxy server with this project. This project server deals with delivering the correct HTML, however, and stays out of the way.
 
-## Get Node.js
+### About the Backend
 
-https://nodejs.org/en/download/package-manager/
+The backend is effectively a webserver which mostly serves the purpose of proxying requests to the selected Tableau server, rewriting and injecting styling where appropriate for mobile, and providing new web routes for serving files related to the frontend.
 
-### Amazon Linux
+The proxy server is required in order for us to be able to avoid the complexity of reverse-engineering the authentication and handshaking protocol between the Tableau clients and this REST API. Instead, the proxy server allows us to present the true authentication screen, with improved styling.
+
+Once the user logs in, the cookie is stored by the browser as usual, but for the proxy's origin, not the Tableau server. In this way, all future calls to the API are authenticated by the cookie by virtue of the proxy allowing it to pass through calls into the API.
+
+### About the Frontend
+
+The frontend is written in [React](https://facebook.github.io/react/), and state management is handled by [Redux](http://redux.js.org/). It tries hard to look exactly like the Tableau iPhone app.
+
+By using React on the frontend, we hope to influence Tableau's mobile app team to look into using [react-native](http://facebook.github.io/react-native/) in order to deliver mobile-web, ios, and iphone with a relatively consistent codebase.
+
+## Platform Dependencies
+
+* [node v6.9.0 or newer](https://nodejs.org/en/)
+
+## Instructions
+
+You can use these simple steps to test or work on this project
+
+0. Install nodejs
+0. Clone the repo `git clone https://github.com/bdwalker93/Tableau-Proxy`
+0. `cd` into the repo
+0. `npm install` to download node modules
+0. `npm start` to start the server
+
+# Deployment Guide
+
+The rest of this document will walk you through installation of the application on Amazon Linux (EC2).
+
+*Do all of this as the root user.*
+
+## Install Node.js
 
 ```
-curl --silent --location https://rpm.nodesource.com/setup_5.x | sudo bash -
+curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -
 yum -y install nodejs gcc-c++ make
 ```
 
@@ -27,49 +57,33 @@ npm install -g pm2
 
 ## Set PM2 to run on startup
 
-### Amazon Linux
-
 ```
 pm2 startup amazon
 ```
 
-## Deploying locally with PM2
+## Deploying Tableau-Proxy with PM2
 
 ```
 git clone https://github.com/bdwalker93/Tableau-Proxy
 cd Tableau-Proxy
 npm install
-pm2 start Tableau-Proxy
 ```
 
-## Get Nginx
-
-We use nginx in front of Tableau-Proxy as a reverse proxy primarily to separate the application itself from the web server exposed to the outside world. You can benefit from this separation in such ways as keeping TLS configuration logic outside of the app, allow nginx to bind to port 80 with a higher privilege user whilst the app itself runs as a lower privilege user using a higher port number, and others.
-
-### Amazon Linux
+Because this is a deployment, you probably want to use a real certificate (ask your network administrator) and bind to port 443. This is done by creating a new config file in the project root:
 
 ```
-yum -y install nginx
-```
-
-## Configure Nginx
-
-Find the empty `location / {}` and replace it with the following:
-
-**/etc/nginx/nginx.conf**
-```
-location / {
-    proxy_pass http://127.0.0.1:3000;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection 'upgrade';
-    proxy_set_header Host $host;
-    proxy_cache_bypass $http_upgrade;
+cat <<EOF > config.json
+{
+  "key": "/path/to/your-real-key.key",
+  "cert": "/path/to/your-real-cert.cert",
+  "port": 443
 }
 ```
 
-Apply the changes by restarting nginx
+You can test this by running `npm start` -- if it works, then continue to deploy:
 
-`/etc/init.d/nginx restart`
+```
+pm2 start Tableau-Proxy
+```
 
-`Tableau-Proxy` should now be accessible on port 80
+`Tableau-Proxy` should now be accessible, and should automatically start if you restart the server.

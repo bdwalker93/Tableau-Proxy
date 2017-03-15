@@ -1,0 +1,5 @@
+{
+  "key": "localhost.key",
+  "cert": "localhost.cert",
+  "port": 3000
+}

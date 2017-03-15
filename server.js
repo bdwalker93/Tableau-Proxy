@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 var fs = require('fs');
-var PORT = 3000;
 var https = require('https');
 var httpProxy = require('http-proxy');
 var express = require('express');
@@ -11,6 +10,15 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const ExpressReactViews = require('express-react-views').createEngine;
 const glob = Promise.promisify(require('glob'));
+
+let config;
+try {
+  config = require('./config.json');
+} catch (e) {
+  config = require('./config.sample.json');
+}
+
+const {key, cert, port} = config;
 
 var app = express();
 
@@ -126,8 +134,8 @@ app.get('/bundle.js', fileMiddleware('react/bundle.js'));
 app.use(noTarget500, dynamicProxyMiddleware);
 
 https.createServer({
-  key: fs.readFileSync('localhost.key', 'utf8'),
-  cert: fs.readFileSync('localhost.cert', 'utf8')
-}, app).listen(PORT, function() {
-  console.log('Proxy server running: https://localhost:'+PORT);
+  key: fs.readFileSync(key, 'utf8'),
+  cert: fs.readFileSync(cert, 'utf8')
+}, app).listen(port, function() {
+  console.log('Proxy server running: https://localhost:'+port);
 });
