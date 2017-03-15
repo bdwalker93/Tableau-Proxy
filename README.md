@@ -33,7 +33,7 @@ Once the user logs in, the cookie is stored by the browser as usual, but for the
 
 The frontend is written in [React](https://facebook.github.io/react/), and state management is handled by [Redux](http://redux.js.org/). It tries hard to look exactly like the Tableau iPhone app.
 
-By using React on the frontend, we hope to influence Tableau's mobile app team to look into using [react-native](http://facebook.github.io/react-native/) in order to deliver mobile-web, ios, and iphone with a relatively consistent codebase.
+By using React on the frontend, we hope to influence Tableau's mobile app team to look into using [react-native](http://facebook.github.io/react-native/) in order to deliver mobile-web, ios, and android more easily without the need to extend beyond their existing resources.
 
 ## Platform Dependencies
 
