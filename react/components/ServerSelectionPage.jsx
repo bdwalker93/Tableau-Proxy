@@ -10,7 +10,7 @@ import { Page } from './Page';
 
 const ServerSelection = React.createClass({
   getInitialState() {
-    return { value: cookies.get("PROXY_TARGET") || ""} 
+    return { value: cookies.get("PROXY_TARGET") || "https://tableau.ics.uci.edu" } 
   },
   handleChange(e) {
     this.setState({ value: e.target.value });
